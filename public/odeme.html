@@ -1,0 +1,2119 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Sipariş — HOMENUP</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet">
+
+
+<!-- ---------- FIREBASE ---------- -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+
+<script>
+
+var firebaseConfig = {
+
+  apiKey: "AIzaSyDD8d_fqaEEqVLaZoHKxTOAfMGinkPVQrM",
+
+  authDomain: "homenup-8c6ce.firebaseapp.com",
+
+  projectId: "homenup-8c6ce",
+
+  appId: "1:785637094317:web:3692bcc5465a4114422724"
+
+};
+
+
+firebase.initializeApp(firebaseConfig);
+
+var db = firebase.firestore();
+
+</script>
+
+
+<!-- ---------- PAYTR ---------- -->
+
+<script src="https://www.paytr.com/js/iframeResizer.min.js?v2"></script>
+
+
+<style>
+
+:root{
+  --kagit:#FFFFFF;
+  --zemin:#F3F3F1;
+  --murekkep:#16181B;
+  --soluk:#6E7278;
+  --cizgi:#E2E2DE;
+  --vurgu:#1F4B43;
+  --vurgu-yazi:#FFFFFF;
+  --max:1200px;
+  --bosluk:24px;
+
+  box-sizing:border-box;
+
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px)
+}
+
+
+*,*::before,*::after{
+  box-sizing:inherit
+}
+
+
+@media (prefers-color-scheme: dark){
+
+  :root:not([data-theme="light"]){
+
+    --kagit:#121316;
+    --zemin:#1A1C20;
+    --murekkep:#ECECEA;
+    --soluk:#9A9EA4;
+    --cizgi:#2A2D32;
+    --vurgu:#6FBBA8;
+    --vurgu-yazi:#101314
+
+  }
+
+}
+
+
+:root[data-theme="dark"]{
+
+  --kagit:#121316;
+  --zemin:#1A1C20;
+  --murekkep:#ECECEA;
+  --soluk:#9A9EA4;
+  --cizgi:#2A2D32;
+  --vurgu:#6FBBA8;
+  --vurgu-yazi:#101314
+
+}
+
+
+html{
+  scroll-padding-top:env(safe-area-inset-top,0px)
+}
+
+
+body{
+
+  margin:0;
+
+  background:var(--kagit);
+
+  color:var(--murekkep);
+
+  font-family:"Instrument Sans",-apple-system,"Segoe UI",Roboto,sans-serif;
+
+  font-size:16px;
+
+  line-height:1.55;
+
+  -webkit-font-smoothing:antialiased
+
+}
+
+
+img{
+  max-width:100%;
+  display:block
+}
+
+
+a{
+  color:inherit;
+  text-decoration:none
+}
+
+
+button,input,textarea,select{
+  font-family:inherit
+}
+
+
+button{
+  cursor:pointer
+}
+
+
+:focus-visible{
+  outline:2px solid var(--vurgu);
+  outline-offset:3px
+}
+
+
+.kap{
+  max-width:var(--max);
+  margin:0 auto;
+  padding:0 var(--bosluk)
+}
+
+
+/* ---------- HEADER ---------- */
+
+.ust{
+
+  border-bottom:1px solid var(--cizgi);
+
+  position:sticky;
+
+  top:env(safe-area-inset-top,0px);
+
+  z-index:20;
+
+  background:var(--kagit)
+
+}
+
+
+.ust .kap{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:28px;
+
+  height:68px
+
+}
+
+
+.logo{
+
+  font-family:"Instrument Serif",Georgia,serif;
+
+  font-size:26px;
+
+  letter-spacing:-.01em
+
+}
+
+
+.menu{
+
+  display:flex;
+
+  gap:22px;
+
+  font-size:15px;
+
+  color:var(--soluk);
+
+  margin-left:auto
+}
+
+
+.menu a:hover{
+  color:var(--murekkep)
+}
+
+
+.sepet{
+
+  border:1px solid var(--cizgi);
+
+  border-radius:999px;
+
+  padding:7px 16px;
+
+  font-size:14px;
+
+  white-space:nowrap;
+
+  background:transparent;
+
+  color:inherit;
+
+  flex-shrink:0
+
+}
+
+
+@media(max-width:720px){
+
+  .menu{
+    display:none
+  }
+
+  .sepet{
+    margin-left:auto
+  }
+
+}
+
+
+/* ---------- SAYFA ---------- */
+
+.yol{
+
+  font-size:14px;
+
+  color:var(--soluk);
+
+  padding:22px 0 18px
+
+}
+
+
+.yol a:hover{
+  color:var(--murekkep)
+}
+
+
+.sayfa{
+
+  display:grid;
+
+  grid-template-columns:1.1fr .9fr;
+
+  gap:56px;
+
+  padding-bottom:72px;
+
+  align-items:start
+
+}
+
+
+@media(max-width:850px){
+
+  .sayfa{
+
+    grid-template-columns:1fr;
+
+    gap:32px
+
+  }
+
+}
+
+
+.baslik{
+
+  font-family:"Instrument Serif",Georgia,serif;
+
+  font-weight:400;
+
+  font-size:40px;
+
+  line-height:1.1;
+
+  letter-spacing:-.015em;
+
+  margin:0 0 30px
+
+}
+
+
+.aciklama{
+
+  color:var(--soluk);
+
+  margin:-18px 0 28px
+
+}
+
+
+/* ---------- FORM ---------- */
+
+.form-kutu{
+
+  border:1px solid var(--cizgi);
+
+  padding:28px;
+
+  background:var(--kagit)
+
+}
+
+
+.form-grup{
+
+  margin-bottom:20px
+
+}
+
+
+.form-grup:last-child{
+
+  margin-bottom:0
+
+}
+
+
+.form-grup label{
+
+  display:block;
+
+  font-size:14px;
+
+  font-weight:600;
+
+  margin-bottom:8px
+
+}
+
+
+.form-grup input,
+.form-grup textarea{
+
+  width:100%;
+
+  border:1px solid var(--cizgi);
+
+  background:var(--kagit);
+
+  color:var(--murekkep);
+
+  padding:12px 14px;
+
+  border-radius:4px;
+
+  font-size:15px;
+
+  outline:none
+
+}
+
+
+.form-grup input:focus,
+.form-grup textarea:focus{
+
+  border-color:var(--vurgu)
+
+}
+
+
+.form-grup textarea{
+
+  min-height:120px;
+
+  resize:vertical
+
+}
+
+
+.form-iki{
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:14px
+
+}
+
+
+@media(max-width:560px){
+
+  .form-iki{
+
+    grid-template-columns:1fr
+
+  }
+
+}
+
+
+/* ---------- SİPARİŞ ÖZETİ ---------- */
+
+.ozet{
+
+  border:1px solid var(--cizgi);
+
+  background:var(--zemin);
+
+  padding:24px
+
+}
+
+
+.ozet h2{
+
+  font-family:"Instrument Serif",Georgia,serif;
+
+  font-size:28px;
+
+  font-weight:400;
+
+  margin:0 0 20px
+
+}
+
+
+.urunler{
+
+  border-top:1px solid var(--cizgi)
+
+}
+
+
+.urun{
+
+  display:grid;
+
+  grid-template-columns:72px 1fr auto;
+
+  gap:14px;
+
+  padding:16px 0;
+
+  border-bottom:1px solid var(--cizgi)
+
+}
+
+
+.urun img{
+
+  width:72px;
+
+  height:72px;
+
+  object-fit:cover;
+
+  background:var(--kagit)
+
+}
+
+
+.urun-ad{
+
+  font-size:14px;
+
+  font-weight:600;
+
+  margin:0 0 4px
+
+}
+
+
+.urun-detay{
+
+  font-size:13px;
+
+  color:var(--soluk);
+
+  margin:0
+
+}
+
+
+.urun-sag{
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:flex-end;
+
+  justify-content:space-between
+
+}
+
+
+.urun-fiyat{
+
+  font-size:14px;
+
+  font-weight:600;
+
+  white-space:nowrap
+
+}
+
+
+/* adet + - ve kaldır */
+
+.adet-kontrol{
+
+  display:inline-flex;
+
+  align-items:center;
+
+  border:1px solid var(--cizgi);
+
+  margin-top:10px;
+
+  border-radius:4px;
+
+  overflow:hidden
+
+}
+
+
+.adet-kontrol button{
+
+  width:34px;
+
+  height:32px;
+
+  border:0;
+
+  background:var(--kagit);
+
+  color:var(--murekkep);
+
+  font-size:18px
+
+}
+
+
+.adet-kontrol button:hover{
+
+  background:var(--zemin)
+
+}
+
+
+.adet-kontrol span{
+
+  min-width:34px;
+
+  text-align:center;
+
+  font-size:14px
+
+}
+
+
+.kaldir{
+
+  border:0;
+
+  background:none;
+
+  color:var(--soluk);
+
+  font-size:13px;
+
+  text-decoration:underline;
+
+  padding:0
+
+}
+
+
+.kaldir:hover{
+
+  color:var(--murekkep)
+
+}
+
+
+.toplam{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  padding-top:20px;
+
+  font-size:16px;
+
+  font-weight:600
+
+}
+
+
+.toplam strong{
+
+  font-size:22px
+
+}
+
+
+.buton{
+
+  width:100%;
+
+  margin-top:20px;
+
+  padding:15px 20px;
+
+  border-radius:4px;
+
+  border:1px solid var(--vurgu);
+
+  background:var(--vurgu);
+
+  color:var(--vurgu-yazi);
+
+  font-size:15px;
+
+  font-weight:600
+
+}
+
+
+.buton:hover{
+
+  filter:brightness(1.08)
+
+}
+
+
+.buton:disabled{
+
+  opacity:.5;
+
+  cursor:default
+
+}
+
+
+.geri{
+
+  display:block;
+
+  text-align:center;
+
+  margin-top:16px;
+
+  font-size:14px;
+
+  color:var(--soluk)
+
+}
+
+
+.geri:hover{
+
+  color:var(--murekkep)
+
+}
+
+
+/* ---------- BOŞ SEPET ---------- */
+
+.bos{
+
+  text-align:center;
+
+  padding:50px 20px;
+
+  color:var(--soluk)
+
+}
+
+
+.bos h1{
+
+  font-family:"Instrument Serif",Georgia,serif;
+
+  color:var(--murekkep);
+
+  font-size:32px;
+
+  font-weight:400;
+
+  margin:0 0 10px
+
+}
+
+
+.bos a{
+
+  display:inline-block;
+
+  margin-top:14px;
+
+  padding:12px 18px;
+
+  border:1px solid var(--vurgu);
+
+  color:var(--vurgu);
+
+  border-radius:4px
+
+}
+
+
+/* ---------- BİLDİRİM ---------- */
+
+.bildirim{
+
+  position:fixed;
+
+  left:50%;
+
+  bottom:28px;
+
+  transform:translate(-50%,20px);
+
+  background:var(--murekkep);
+
+  color:var(--kagit);
+
+  padding:12px 20px;
+
+  border-radius:4px;
+
+  font-size:14px;
+
+  opacity:0;
+
+  pointer-events:none;
+
+  transition:.25s;
+
+  z-index:100
+
+}
+
+
+.bildirim.goster{
+
+  opacity:1;
+
+  transform:translate(-50%,0)
+
+}
+
+
+@media(prefers-reduced-motion:reduce){
+
+  *{
+    transition:none!important
+  }
+
+}
+
+
+/* ---------- NEVRESİM TAKIMI DROPDOWN ---------- */
+
+.menu > li{
+
+  list-style:none;
+
+  position:relative
+
+}
+
+
+.alt-var{
+
+  position:relative
+
+}
+
+
+.alt{
+
+  position:absolute;
+
+  top:100%;
+
+  left:-15px;
+
+  min-width:180px;
+
+  margin:0;
+
+  padding:10px 0;
+
+  list-style:none;
+
+  background:var(--kagit);
+
+  border:1px solid var(--cizgi);
+
+  box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+  display:none;
+
+  z-index:50
+
+}
+
+
+.alt-var:hover .alt{
+
+  display:block
+
+}
+
+
+.alt li{
+
+  margin:0;
+
+  padding:0
+
+}
+
+
+.alt li a{
+
+  display:block;
+
+  padding:9px 15px;
+
+  white-space:nowrap;
+
+  color:var(--soluk);
+
+  font-size:14px
+
+}
+
+
+.alt li a:hover{
+
+  color:var(--murekkep);
+
+  background:var(--zemin)
+
+}
+
+
+/* ---------- PAYTR ALANI ---------- */
+
+#paytrAlan{
+
+  display:none;
+
+  margin-top:30px;
+
+  border:1px solid var(--cizgi);
+
+  background:var(--kagit);
+
+  padding:20px
+
+}
+
+
+#paytrBaslik{
+
+  font-family:"Instrument Serif",Georgia,serif;
+
+  font-size:30px;
+
+  margin:0 0 15px;
+
+  font-weight:400
+
+}
+
+
+#paytrAciklama{
+
+  color:var(--soluk);
+
+  font-size:14px;
+
+  margin-bottom:20px
+
+}
+
+
+#paytriframe{
+
+  width:100%;
+
+  min-height:650px;
+
+  border:0
+
+}
+
+
+/* ---------- PAYTR GERİ DÖN ---------- */
+
+.paytr-geri{
+
+  display:block;
+
+  width:100%;
+
+  padding:13px;
+
+  margin-top:15px;
+
+  border:1px solid var(--cizgi);
+
+  background:transparent;
+
+  color:var(--murekkep);
+
+  border-radius:4px;
+
+  text-align:center
+
+}
+
+
+.paytr-geri:hover{
+
+  background:var(--zemin)
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header class="ust">
+
+<div class="kap">
+
+<a href="homen3.html" class="logo">
+HOMENUP
+</a>
+
+
+<nav class="menu">
+
+<a href="kategori.html">
+Lastikli Çarşaf
+</a>
+
+
+<li class="alt-var">
+
+<a href="kategori2.html">
+Nevresim Takımı
+</a>
+
+
+<ul class="alt">
+
+<li>
+<a href="kategori2.html?k=Tek-Kişilik">
+Tek Kişilik
+</a>
+</li>
+
+
+<li>
+<a href="kategori2.html?k=Çift-Kişilik">
+Çift Kişilik
+</a>
+</li>
+
+</ul>
+
+</li>
+
+
+<a href="alez2.html">
+Alez
+</a>
+
+
+<a href="pestemal.html">
+Peştemal Panço
+</a>
+
+
+<a href="indirim.html">
+İndirim
+</a>
+
+</nav>
+
+
+<button
+class="sepet"
+id="sepetBtn"
+onclick="window.open('odeme.html','_blank')">
+
+Sepet (0)
+
+</button>
+
+</div>
+
+</header>
+
+
+<main class="kap">
+
+
+<div class="yol">
+
+<a href="homen3.html">
+Ana sayfa
+</a>
+
+/
+
+<span>Sipariş</span>
+
+</div>
+
+
+<div id="icerik">
+
+<div class="sayfa">
+
+
+<!-- SOL -->
+
+<div>
+
+<br>
+<br>
+
+<h1 class="baslik">
+Sipariş Bilgileri
+</h1>
+
+
+<p class="aciklama">
+Siparişinizi tamamlamak için bilgilerinizi girin.
+</p>
+
+
+<div class="form-kutu">
+
+
+<div class="form-grup">
+
+<label for="adSoyad">
+Ad Soyad
+</label>
+
+<input
+type="text"
+id="adSoyad"
+placeholder="Ad Soyad"
+autocomplete="name">
+
+</div>
+
+
+<div class="form-iki">
+
+
+<div class="form-grup">
+
+<label for="telefon">
+Telefon
+</label>
+
+<input
+type="tel"
+id="telefon"
+placeholder="05XX XXX XX XX"
+autocomplete="tel">
+
+</div>
+
+
+<div class="form-grup">
+
+<label for="email">
+E-posta
+</label>
+
+<input
+type="email"
+id="email"
+placeholder="ornek@email.com"
+autocomplete="email">
+
+</div>
+
+</div>
+
+
+<div class="form-iki">
+
+
+<div class="form-grup">
+
+<label for="il">
+İl
+</label>
+
+<input
+type="text"
+id="il"
+placeholder="İl"
+autocomplete="address-level1">
+
+</div>
+
+
+<div class="form-grup">
+
+<label for="ilce">
+İlçe
+</label>
+
+<input
+type="text"
+id="ilce"
+placeholder="İlçe"
+autocomplete="address-level2">
+
+</div>
+
+</div>
+
+
+<div class="form-grup">
+
+<label for="adres">
+Açık Adres
+</label>
+
+<textarea
+id="adres"
+placeholder="Mahalle, sokak, bina no, daire no vb."
+autocomplete="street-address"></textarea>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- SAĞ -->
+
+<div class="ozet">
+
+<h2>
+Sipariş Özeti
+</h2>
+
+
+<div
+class="urunler"
+id="urunler">
+</div>
+
+
+<div class="toplam">
+
+<span>
+Toplam
+</span>
+
+<strong id="toplam">
+0 TL
+</strong>
+
+</div>
+
+
+<button
+class="buton"
+id="siparisBtn">
+
+Ödemeye Geç
+
+</button>
+
+
+<a
+href="homen3.html"
+class="geri">
+
+Alışverişe devam et
+
+</a>
+
+</div>
+
+
+</div>
+
+
+<!-- ---------- PAYTR ---------- -->
+
+<div id="paytrAlan">
+
+<h2 id="paytrBaslik">
+Güvenli Ödeme
+</h2>
+
+
+<div id="paytrAciklama">
+
+Ödeme işleminizi güvenli PayTR ödeme ekranından
+tamamlayabilirsiniz.
+
+</div>
+
+
+<div id="paytrKutu">
+
+</div>
+
+
+<button
+class="paytr-geri"
+id="paytrGeri"
+type="button">
+
+Sipariş bilgilerine geri dön
+
+</button>
+
+</div>
+
+
+</div>
+
+
+</main>
+
+
+<div
+class="bildirim"
+id="bildirim"
+role="status">
+</div>
+
+
+<script>
+
+
+/* ---------- YARDIMCI ---------- */
+
+
+var $ = function(id){
+
+  return document.getElementById(id);
+
+};
+
+
+var TL = function(n){
+
+  return Number(n || 0)
+    .toLocaleString("tr-TR") + " TL";
+
+};
+
+
+var esc = function(s){
+
+  return String(s == null ? "" : s)
+    .replace(/[&<>"]/g,function(c){
+
+      return {
+
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;"
+
+      }[c];
+
+    });
+
+};
+
+
+/* ---------- SEPET ---------- */
+
+
+var sepet = [];
+
+
+try{
+
+  sepet = JSON.parse(
+    localStorage.getItem("homenup_sepet") || "[]"
+  );
+
+}catch(e){
+
+  sepet = [];
+
+}
+
+
+function sepetiKaydet(){
+
+  try{
+
+    localStorage.setItem(
+      "homenup_sepet",
+      JSON.stringify(sepet)
+    );
+
+  }catch(e){}
+
+}
+
+
+function toplamHesapla(){
+
+  return sepet.reduce(function(t,u){
+
+    return t +
+      Number(u.adet || 1) *
+      Number(u.fiyat || 0);
+
+  },0);
+
+}
+
+
+function sepetSayisiniGuncelle(){
+
+  var adet = sepet.reduce(
+    function(t,u){
+
+      return t + Number(u.adet || 0);
+
+    },0
+  );
+
+
+  $("sepetBtn").textContent =
+    "Sepet (" + adet + ")";
+
+}
+
+
+/* ---------- ADET ---------- */
+
+
+function adetArtir(i){
+
+  if(!sepet[i]) return;
+
+  sepet[i].adet =
+    Math.min(
+      10,
+      Number(sepet[i].adet || 1) + 1
+    );
+
+  degisti();
+
+}
+
+
+function adetAzalt(i){
+
+  if(!sepet[i]) return;
+
+  sepet[i].adet =
+    Math.max(
+      1,
+      Number(sepet[i].adet || 1) - 1
+    );
+
+  degisti();
+
+}
+
+
+function urunKaldir(i){
+
+  if(!sepet[i]) return;
+
+  sepet.splice(i,1);
+
+  degisti();
+
+  bildir("Ürün sepetten kaldırıldı.");
+
+}
+
+
+function degisti(){
+
+  sepetiKaydet();
+
+  siparisOzetiniCiz();
+
+  sepetSayisiniGuncelle();
+
+}
+
+
+/* ---------- SİPARİŞ ÖZETİ ---------- */
+
+
+function siparisOzetiniCiz(){
+
+  var alan = $("urunler");
+
+
+  if(!sepet.length){
+
+    alan.innerHTML =
+
+      '<div class="bos">' +
+
+      '<h1>Sepetiniz boş</h1>' +
+
+      '<p>Sepetinize ürün eklediğinizde burada görünecektir.</p>' +
+
+      '<a href="homen3.html">Alışverişe dön</a>' +
+
+      '</div>';
+
+
+    $("toplam").textContent =
+      "0 TL";
+
+
+    $("siparisBtn").disabled =
+      true;
+
+    return;
+
+  }
+
+
+  $("siparisBtn").disabled =
+    false;
+
+
+  alan.innerHTML = sepet.map(
+    function(u,i){
+
+      var adet =
+        Number(u.adet || 1);
+
+
+      var satirToplam =
+        adet * Number(u.fiyat || 0);
+
+
+      return '<div class="urun">' +
+
+        '<img src="' +
+        esc(u.res) +
+        '" alt="' +
+        esc(u.ad) +
+        '" onerror="this.style.visibility=\'hidden\'">' +
+
+        '<div>' +
+
+          '<p class="urun-ad">' +
+          esc(u.ad) +
+          '</p>' +
+
+          '<p class="urun-detay">' +
+          esc(u.olcu || "") +
+          '</p>' +
+
+          '<div class="adet-kontrol">' +
+
+            '<button ' +
+            'data-islem="azalt" ' +
+            'data-i="' + i + '">' +
+            '−' +
+            '</button>' +
+
+            '<span>' +
+            adet +
+            '</span>' +
+
+            '<button ' +
+            'data-islem="artir" ' +
+            'data-i="' + i + '">' +
+            '+' +
+            '</button>' +
+
+          '</div>' +
+
+        '</div>' +
+
+        '<div class="urun-sag">' +
+
+          '<div class="urun-fiyat">' +
+          TL(satirToplam) +
+          '</div>' +
+
+          '<button ' +
+          'class="kaldir" ' +
+          'data-islem="kaldir" ' +
+          'data-i="' + i + '">' +
+          'Kaldır' +
+          '</button>' +
+
+        '</div>' +
+
+      '</div>';
+
+    }
+  ).join("");
+
+
+  $("toplam").textContent =
+    TL(toplamHesapla());
+
+}
+
+
+/* ---------- SEPET BUTONLARI ---------- */
+
+
+$("urunler").addEventListener(
+  "click",
+  function(e){
+
+    var b =
+      e.target.closest(
+        "button[data-islem]"
+      );
+
+
+    if(!b) return;
+
+
+    var i =
+      Number(b.dataset.i);
+
+
+    if(
+      b.dataset.islem === "artir"
+    ){
+
+      adetArtir(i);
+
+    }
+
+    else if(
+      b.dataset.islem === "azalt"
+    ){
+
+      adetAzalt(i);
+
+    }
+
+    else if(
+      b.dataset.islem === "kaldir"
+    ){
+
+      urunKaldir(i);
+
+    }
+
+  }
+);
+
+
+/* ---------- BİLDİRİM ---------- */
+
+
+function bildir(mesaj){
+
+  var b = $("bildirim");
+
+
+  b.textContent =
+    mesaj;
+
+
+  b.classList.add("goster");
+
+
+  clearTimeout(
+    bildir.zamanlayici
+  );
+
+
+  bildir.zamanlayici =
+    setTimeout(
+      function(){
+
+        b.classList.remove("goster");
+
+      },
+      2500
+    );
+
+}
+
+
+/* ---------- MÜŞTERİ BİLGİLERİ ---------- */
+
+
+function musteriBilgileriniAl(){
+
+  return {
+
+    adSoyad:
+      $("adSoyad").value.trim(),
+
+    telefon:
+      $("telefon").value.trim(),
+
+    email:
+      $("email").value.trim(),
+
+    il:
+      $("il").value.trim(),
+
+    ilce:
+      $("ilce").value.trim(),
+
+    adres:
+      $("adres").value.trim()
+
+  };
+
+}
+
+
+/* ---------- FORM KONTROL ---------- */
+
+
+function formKontrol(v){
+
+  var kontrol = [
+
+    [
+      "adSoyad",
+      "Ad soyad bilgisini girin."
+    ],
+
+    [
+      "telefon",
+      "Telefon numarasını girin."
+    ],
+
+    [
+      "email",
+      "E-posta adresini girin."
+    ],
+
+    [
+      "il",
+      "İl bilgisini girin."
+    ],
+
+    [
+      "ilce",
+      "İlçe bilgisini girin."
+    ],
+
+    [
+      "adres",
+      "Açık adresi girin."
+    ]
+
+  ];
+
+
+  for(
+    var k=0;
+    k<kontrol.length;
+    k++
+  ){
+
+    if(
+      !v[kontrol[k][0]]
+    ){
+
+      bildir(
+        kontrol[k][1]
+      );
+
+      $(kontrol[k][0]).focus();
+
+      return false;
+
+    }
+
+  }
+
+
+  if(
+    !/^\S+@\S+\.\S+$/.test(
+      v.email
+    )
+  ){
+
+    bildir(
+      "Geçerli bir e-posta girin."
+    );
+
+    $("email").focus();
+
+    return false;
+
+  }
+
+
+  if(
+    v.telefon.replace(/\D/g,"").length < 10
+  ){
+
+    bildir(
+      "Geçerli bir telefon numarası girin."
+    );
+
+    $("telefon").focus();
+
+    return false;
+
+  }
+
+
+  if(!sepet.length){
+
+    bildir(
+      "Sepetiniz boş."
+    );
+
+    return false;
+
+  }
+
+
+  return true;
+
+}
+
+
+/* ---------- PAYTR ÖDEME BAŞLAT ---------- */
+
+
+async function paytrOdemeBaslat(){
+
+  var buton =
+    $("siparisBtn");
+
+
+  var v =
+    musteriBilgileriniAl();
+
+
+  if(
+    !formKontrol(v)
+  ){
+
+    return;
+
+  }
+
+
+  buton.disabled =
+    true;
+
+
+  buton.textContent =
+    "Ödeme hazırlanıyor...";
+
+
+  /*
+   * PayTR'ye gönderilecek sipariş
+   */
+
+  var siparisBilgisi = {
+
+    musteri: v,
+
+    urunler: sepet,
+
+    toplam: toplamHesapla()
+
+  };
+
+
+  /*
+   * PayTR backend endpoint'i
+   *
+   * Merchant Key / Salt HTML'de
+   * bulunmaz.
+   */
+
+  try{
+
+    var response =
+      await fetch(
+        "/api/paytr/token",
+        {
+
+          method:"POST",
+
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify(
+              siparisBilgisi
+            )
+
+        }
+      );
+
+
+    var data =
+      await response.json();
+
+
+    if(
+      !response.ok ||
+      data.status !== "success"
+    ){
+
+      console.error(
+        "PayTR token hatası:",
+        data
+      );
+
+
+      throw new Error(
+        data.reason ||
+        "PayTR ödeme ekranı oluşturulamadı."
+      );
+
+    }
+
+
+    /*
+     * Ödeme için merchant_oid
+     * backend tarafından üretilecek.
+     */
+
+    if(data.merchant_oid){
+
+      sessionStorage.setItem(
+        "homenup_paytr_oid",
+        data.merchant_oid
+      );
+
+    }
+
+
+    /*
+     * Sipariş bilgilerini geçici olarak
+     * tarayıcıda tut.
+     *
+     * Kesin sipariş onayı PayTR
+     * Bildirim URL'sinde yapılmalıdır.
+     */
+
+    try{
+
+      sessionStorage.setItem(
+        "homenup_paytr_siparis",
+        JSON.stringify(
+          siparisBilgisi
+        )
+      );
+
+    }catch(e){}
+
+
+    /*
+     * Sipariş özetini gizle
+     */
+
+    $("icerik").style.display =
+      "none";
+
+
+    /*
+     * PayTR alanını aç
+     */
+
+    $("paytrAlan").style.display =
+      "block";
+
+
+    /*
+     * PayTR iframe
+     */
+
+    $("paytrKutu").innerHTML =
+
+      '<iframe ' +
+
+      'src="https://www.paytr.com/odeme/guvenli/' +
+      encodeURIComponent(data.token) +
+      '" ' +
+
+      'id="paytriframe" ' +
+
+      'frameborder="0" ' +
+
+      'scrolling="no" ' +
+
+      'style="width:100%;min-height:650px;border:0;">' +
+
+      '</iframe>';
+
+
+    /*
+     * iframe boyutlandırma
+     */
+
+    if(
+      typeof iFrameResize ===
+      "function"
+    ){
+
+      iFrameResize(
+        {},
+        "#paytriframe"
+      );
+
+    }
+
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+
+  }catch(hata){
+
+    console.error(
+      "PayTR ödeme hatası:",
+      hata
+    );
+
+
+    bildir(
+      hata.message ||
+      "Ödeme ekranı açılamadı."
+    );
+
+
+    buton.disabled =
+      false;
+
+
+    buton.textContent =
+      "Ödemeye Geç";
+
+  }
+
+}
+
+
+/* ---------- ÖDEME BUTONU ---------- */
+
+
+$("siparisBtn").onclick =
+  function(){
+
+    paytrOdemeBaslat();
+
+  };
+
+
+/* ---------- PAYTR'DEN GERİ DÖN ---------- */
+
+
+$("paytrGeri").onclick =
+  function(){
+
+    $("paytrAlan").style.display =
+      "none";
+
+
+    $("icerik").style.display =
+      "block";
+
+
+    var iframe =
+      $("paytrKutu");
+
+
+    iframe.innerHTML =
+      "";
+
+
+    var buton =
+      $("siparisBtn");
+
+
+    buton.disabled =
+      false;
+
+
+    buton.textContent =
+      "Ödemeye Geç";
+
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+  };
+
+
+/* ---------- BAŞLANGIÇ ---------- */
+
+
+siparisOzetiniCiz();
+
+sepetSayisiniGuncelle();
+
+
+/* ---------- DİĞER SEKMEDEN GELEN DEĞİŞİKLİK ---------- */
+
+
+window.addEventListener(
+  "storage",
+  function(e){
+
+    if(
+      e.key === "homenup_sepet"
+    ){
+
+      try{
+
+        sepet =
+          JSON.parse(
+            e.newValue || "[]"
+          );
+
+      }catch(x){
+
+        sepet = [];
+
+      }
+
+
+      siparisOzetiniCiz();
+
+      sepetSayisiniGuncelle();
+
+    }
+
+  }
+);
+
+</script>
+
+
+</body>
+
+</html>

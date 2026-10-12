@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Yönetim — HOMENUP</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<style>
+:root{
+  --kagit:#FFFFFF;
+  --zemin:#F3F3F1;
+  --murekkep:#16181B;
+  --soluk:#6E7278;
+  --cizgi:#E2E2DE;
+  --vurgu:#1F4B43;
+  --vurgu-yazi:#FFFFFF;
+  --tehlike:#B3261E;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px)
+}
+*,*::before,*::after{box-sizing:inherit}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --kagit:#121316;
+    --zemin:#1A1C20;
+    --murekkep:#ECECEA;
+    --soluk:#9A9EA4;
+    --cizgi:#2A2D32;
+    --vurgu:#6FBBA8;
+    --vurgu-yazi:#101314;
+    --tehlike:#F2A19B
+  }
+}
+:root[data-theme="dark"]{
+  --kagit:#121316;
+  --zemin:#1A1C20;
+  --murekkep:#ECECEA;
+  --soluk:#9A9EA4;
+  --cizgi:#2A2D32;
+  --vurgu:#6FBBA8;
+  --vurgu-yazi:#101314;
+  --tehlike:#F2A19B
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0;
+  background:var(--zemin);
+  color:var(--murekkep);
+  font-family:"Instrument Sans",-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased
+}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--vurgu);outline-offset:3px}
+.ust{
+  background:var(--kagit);
+  border-bottom:1px solid var(--cizgi);
+  position:sticky;
+  top:env(safe-area-inset-top,0px);
+  z-index:10
+}
+.ust div{
+  max-width:1100px;
+  margin:0 auto;
+  padding:0 24px;
+  height:64px;
+  display:flex;
+  align-items:center;
+  gap:20px
+}
+.logo{font-family:"Instrument Serif",Georgia,serif;font-size:24px}
+.ust small{color:var(--soluk)}
+.ust a.git{margin-left:auto;color:var(--soluk);border-bottom:1px solid var(--cizgi)}
+main{max-width:1100px;margin:0 auto;padding:32px 24px 72px}
+.ozet{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.kart{background:var(--kagit);border:1px solid var(--cizgi);padding:18px 20px}
+.kart p{margin:0;color:var(--soluk);font-size:14px}
+.kart b{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:34px;line-height:1.2}
+@media(max-width:640px){.ozet{grid-template-columns:1fr}}
+.bas{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.bas h2{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:30px;margin:0;margin-right:auto}
+.ara{border:1px solid var(--cizgi);background:var(--kagit);padding:9px 14px;border-radius:4px;min-width:200px}
+.b{border:1px solid var(--vurgu);background:var(--vurgu);color:var(--vurgu-yazi);padding:10px 20px;border-radius:4px;font-weight:500}
+.b.c{background:transparent;color:var(--vurgu)}
+.b.s{background:transparent;border-color:var(--cizgi);color:var(--tehlike)}
+.b:hover{filter:brightness(1.08)}
+.b.k{padding:6px 12px;font-size:14px}
+.tablo{background:var(--kagit);border:1px solid var(--cizgi);overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--cizgi);vertical-align:middle}
+th{font-size:13px;color:var(--soluk);font-weight:500;background:var(--zemin)}
+tr:last-child td{border-bottom:0}
+td img{width:48px;height:48px;object-fit:cover;background:var(--zemin);display:block}
+td.i{display:flex;gap:8px;justify-content:flex-end}
+.bos{padding:40px;text-align:center;color:var(--soluk)}
+.eski{text-decoration:line-through;color:var(--soluk);margin-right:6px}
+.perde{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  display:none;
+  align-items:flex-start;
+  justify-content:center;
+  padding:5vh 16px;
+  overflow:auto;
+  z-index:30
+}
+.perde.acik{display:flex}
+form{background:var(--kagit);border:1px solid var(--cizgi);width:min(560px,100%);padding:26px}
+form h3{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:28px;margin:0 0 18px}
+label{display:block;font-weight:500;font-size:14px;margin:0 0 14px}
+label span{display:block;color:var(--soluk);font-weight:400;font-size:13px}
+label input,label select,label textarea{
+  display:block;
+  width:100%;
+  margin-top:6px;
+  padding:10px 12px;
+  border:1px solid var(--cizgi);
+  background:var(--kagit);
+  border-radius:4px
+}
+.iki{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.alt{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+.bildirim{
+  position:fixed;
+  left:50%;
+  bottom:28px;
+  transform:translate(-50%,20px);
+  background:var(--murekkep);
+  color:var(--kagit);
+  padding:12px 20px;
+  border-radius:4px;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:60
+}
+.bildirim.g{opacity:1;transform:translate(-50%,0)}
+.yedek{margin-top:28px;color:var(--soluk);font-size:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+
+<body>
+
+<!-- ===== YÖNETİCİ GİRİŞ EKRANI ===== -->
+<div class="perde acik" id="giris" style="background:var(--zemin);z-index:50;align-items:center">
+  <form id="girisForm">
+    <h3>Yönetici girişi</h3>
+    <label>E-posta
+      <input id="gEmail" type="email" required autocomplete="username">
+    </label>
+    <label>Şifre
+      <input id="gSifre" type="password" required autocomplete="current-password">
+    </label>
+    <p id="gHata" style="color:var(--tehlike);font-size:14px;margin:0 0 10px;min-height:20px"></p>
+    <div class="alt"><button class="b" id="gBtn">Giriş yap</button></div>
+  </form>
+</div>
+
+<header class="ust">
+  <div>
+    <span class="logo">HOMENUP</span>
+    <small>Yönetim</small>
+    <a class="git" href="homen3.html" target="_blank">Mağazayı gör</a>
+    <a class="git" href="#" id="cikis" style="margin-left:0">Çıkış</a>
+  </div>
+</header>
+
+<main>
+
+  <section class="ozet">
+    <div class="kart">
+      <p>Toplam ürün</p>
+      <b id="sUrun">0</b>
+    </div>
+    <div class="kart">
+      <p>İndirimdeki ürün</p>
+      <b id="sInd">0</b>
+    </div>
+    <div class="kart">
+      <p>Ortalama fiyat</p>
+      <b id="sOrt">0 TL</b>
+    </div>
+  </section>
+
+  <div class="bas">
+    <h2>Ürünler</h2>
+    <input class="ara" id="ara" type="search" placeholder="Ürün ara" aria-label="Ürün ara">
+    <button class="b" id="yeni">Yeni ürün</button>
+  </div>
+
+  <div class="tablo">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Ürün</th>
+          <th>Kategori</th>
+          <th>Fiyat</th>
+          <th>Ölçüler</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="govde"></tbody>
+    </table>
+    <div class="bos" id="bos" hidden>Ürün bulunamadı.</div>
+  </div>
+
+  <div class="yedek">
+    <button class="b c k" id="indir">Yedeği indir (.json)</button>
+
+    <label style="margin:0">
+      <input id="yukle" type="file" accept=".json" hidden>
+      <span class="b c k" style="display:inline-block;cursor:pointer;color:var(--vurgu)">Yedekten yükle</span>
+    </label>
+
+    <button class="b s k" id="sifirla">Varsayılana dön</button>
+  </div>
+
+</main>
+
+<div class="perde" id="perde">
+  <form id="form">
+    <h3 id="fBaslik">Yeni ürün</h3>
+
+    <label>
+      Ürün adı
+      <input id="fAd" required>
+    </label>
+
+    <div class="iki">
+      <label>
+        Kategori
+        <select id="fKat">
+          <option>Lastikli Çarşaf</option>
+          <option>Nevresim Takımı</option>
+          <option>Tek Kişilik Nevresim Takımı</option>
+          <option>Çift Kişilik Nevresim Takımı</option>
+          <option>Alez</option>
+          <option>Peştemal Panço</option>
+          <option>Bornoz</option>
+          <option>İndirim</option>
+        </select>
+      </label>
+
+      <label>
+        Rozet
+        <span>boş bırakabilirsin</span>
+        <input id="fRozet" placeholder="Yeni, %20, Son 3, vb.">
+      </label>
+    </div>
+
+    <div class="iki">
+      <label>
+        Satış fiyatı (TL)
+        <input id="fFiyat" type="number" min="1" required>
+      </label>
+
+      <label>
+        Eski fiyat (TL)
+        <span>indirim varsa</span>
+        <input id="fEski" type="number" min="1">
+      </label>
+    </div>
+
+    <label>
+      Ölçüler
+      <span>virgülle ayır</span>
+      <input id="fOlcu" placeholder="160x200, 180x200" required>
+    </label>
+
+    <label>
+      Fotoğraf dosya adları
+      <span>virgülle ayır, ilki kapak olur. Dosyalar sitenle aynı klasörde olmalı.</span>
+      <textarea id="fRes" rows="3" required></textarea>
+    </label>
+
+    <div class="alt">
+      <button type="button" class="b c" id="iptal">Vazgeç</button>
+      <button class="b">Kaydet</button>
+    </div>
+  </form>
+</div>
+
+<div class="bildirim" id="bil" role="status"></div>
+
+<script>
+
+/* =========================================================
+   FIREBASE AYARLARI
+   ========================================================= */
+
+var firebaseConfig = {
+  apiKey: "AIzaSyDD8d_fqaEEqVLaZoHKxTOAfMGinkPVQrM",
+  authDomain: "homenup-8c6ce.firebaseapp.com",
+  projectId: "homenup-8c6ce",
+  appId: "1:785637094317:web:3692bcc5465a4114422724"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+var db = firebase.firestore();
+
+var katalogRef = db
+  .collection("magaza")
+  .doc("katalog");
+
+
+/* =========================================================
+   VARSAYILAN ÜRÜNLER
+   ========================================================= */
+
+var VARSAYILAN=[
+
+{
+  ad:"Çift Kişilik Lastikli Çarşaf",
+  kat:"Lastikli Çarşaf",
+  fiyat:1290,
+  rozet:"Yeni",
+  olcu:["160x200","180x200"],
+  res:[
+    "IMG_20260807_165934.png",
+    "IMG_20260807_170437.png",
+    "IMG_20260807_170542.png"
+  ]
+},
+
+{
+  ad:"Çift Kişilik Nevresim Takımı",
+  kat:"Nevresim Takımı",
+  fiyat:590,
+  olcu:["200x220"],
+  res:[
+    "IMG_20260807_141930.png",
+    "IMG_20260807_153823.png"
+  ]
+},
+
+{
+  ad:"Tek Kişilik Nevresim Takımı",
+  kat:"Nevresim Takımı",
+  fiyat:1480,
+  eski:1850,
+  rozet:"%20",
+  olcu:["160x220"],
+  res:[
+    "Yapay Zeka ile Oluşturuldu_20260811_232045_0000.jpg",
+    "Yapay Zeka ile Oluşturuldu_20260811_232345_0000.jpg"
+  ]
+},
+
+{
+  ad:"Çift Kişilik Lastikli Çarşaf",
+  kat:"Lastikli Çarşaf",
+  fiyat:2150,
+  olcu:["160x200","180x200"],
+  res:[
+    "IMG_20260807_170542.png",
+    "IMG_20260807_165934.png"
+  ]
+},
+
+{
+  ad:"Mavi Çiçekli Çift Kişilik Nevresim Takımı",
+  kat:"Nevresim Takımı",
+  fiyat:1120,
+  olcu:["200x220"],
+  res:[
+    "Yapay Zeka ile Oluşturuldu_20260811_231837_0000.jpg",
+    "Yapay Zeka ile Oluşturuldu_20260811_231949_0000.jpg"
+  ]
+},
+
+{
+  ad:"Beyaz Çift Kişilik Lastikli Çarşaf",
+  kat:"Lastikli Çarşaf",
+  fiyat:2790,
+  olcu:["160x200","180x200"],
+  res:[
+    "IMG_20260807_170437.png",
+    "IMG_20260807_165934.png"
+  ]
+},
+
+{
+  ad:"Su Yeşili Tek Kişilik Nevresim Takımı",
+  kat:"Nevresim Takımı",
+  fiyat:1640,
+  rozet:"Son 3",
+  olcu:["160x220"],
+  res:[
+    "Yapay Zeka ile Oluşturuldu_20260811_232345_0000.jpg",
+    "Yapay Zeka ile Oluşturuldu_20260811_232045_0000.jpg"
+  ]
+},
+
+{
+  ad:"Desenli Çift Kişilik Nevresim Takımı",
+  kat:"Nevresim Takımı",
+  fiyat:740,
+  olcu:["200x220"],
+  res:[
+    "Yapay Zeka ile Oluşturuldu_20260811_231949_0000.jpg",
+    "Yapay Zeka ile Oluşturuldu_20260811_231837_0000.jpg"
+  ]
+}
+
+];
+
+
+/* =========================================================
+   GENEL AYARLAR
+   ========================================================= */
+
+var KEY="homenup_urunler";
+
+var $=function(i){
+  return document.getElementById(i);
+};
+
+var TL=function(n){
+  return Number(n).toLocaleString("tr-TR")+" TL";
+};
+
+var esc=function(s){
+  return String(s).replace(/[&<>"]/g,function(c){
+    return {
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;"
+    }[c];
+  });
+};
+
+
+/* =========================================================
+   LOCAL STORAGE
+   ========================================================= */
+
+function oku(){
+
+  try{
+
+    var k=JSON.parse(
+      localStorage.getItem(KEY)
+    );
+
+    if(k && Array.isArray(k)){
+      return k;
+    }
+
+  }catch(e){}
+
+  return JSON.parse(
+    JSON.stringify(VARSAYILAN)
+  );
+}
+
+
+var L=[];
+var duzen=-1;
+
+
+/* =========================================================
+   KAYDET
+   ========================================================= */
+
+function kaydet(){
+
+  try{
+
+    localStorage.setItem(
+      KEY,
+      JSON.stringify(L)
+    );
+
+  }catch(e){
+
+    bil(
+      "Kaydedilemedi: tarayıcı depolaması kapalı"
+    );
+
+  }
+
+
+  /* FIREBASE'E KAYDET */
+
+  katalogRef.set({
+
+    liste: JSON.parse(
+      JSON.stringify(L)
+    )
+
+  })
+
+  .then(function(){
+
+    console.log(
+      "Firebase'e başarıyla kaydedildi."
+    );
+
+  })
+
+  .catch(function(e){
+
+    console.error(
+      "Firebase kayıt hatası:",
+      e
+    );
+
+    bil(
+      "Firebase'e kaydedilemedi"
+    );
+
+  });
+
+
+  ciz();
+}
+
+
+/* =========================================================
+   BİLDİRİM
+   ========================================================= */
+
+function bil(m){
+
+  var b=$("bil");
+
+  b.textContent=m;
+
+  b.classList.add("g");
+
+  clearTimeout(bil.t);
+
+  bil.t=setTimeout(function(){
+
+    b.classList.remove("g");
+
+  },2200);
+}
+
+
+/* =========================================================
+   TABLOYU ÇİZ
+   ========================================================= */
+
+function ciz(){
+
+  var q=$("ara")
+    .value
+    .trim()
+    .toLocaleLowerCase("tr");
+
+  var h="";
+  var n=0;
+  var ind=0;
+  var top=0;
+
+
+  L.forEach(function(u,i){
+
+    top+=u.fiyat;
+
+    if(u.eski){
+      ind++;
+    }
+
+
+    if(
+      q &&
+      (u.ad+" "+u.kat)
+      .toLocaleLowerCase("tr")
+      .indexOf(q)<0
+    ){
+      return;
+    }
+
+
+    n++;
+
+
+    h+=
+      '<tr>'+
+
+      '<td>'+
+      '<img src="'+
+      esc(u.res[0]||"")+
+      '" alt="" onerror="this.style.visibility=\'hidden\'">'+
+      '</td>'+
+
+      '<td>'+
+      '<b style="font-weight:500">'+
+      esc(u.ad)+
+      '</b>'+
+
+      (
+        u.rozet
+        ?
+        ' <small style="color:var(--soluk)">· '+
+        esc(u.rozet)+
+        '</small>'
+        :
+        ''
+      )+
+
+      '<br>'+
+      '<small style="color:var(--soluk)">urun.html?id='+
+      (i+1)+
+      '</small>'+
+
+      '</td>'+
+
+      '<td>'+
+      esc(u.kat)+
+      '</td>'+
+
+      '<td>'+
+
+      (
+        u.eski
+        ?
+        '<span class="eski">'+
+        TL(u.eski)+
+        '</span>'
+        :
+        ''
+      )+
+
+      TL(u.fiyat)+
+
+      '</td>'+
+
+      '<td>'+
+      esc(u.olcu.join(", "))+
+      '</td>'+
+
+      '<td class="i">'+
+
+      '<button class="b c k" data-d="'+i+'">'+
+      'Düzenle'+
+      '</button>'+
+
+      '<button class="b s k" data-s="'+i+'">'+
+      'Sil'+
+      '</button>'+
+
+      '</td>'+
+
+      '</tr>';
+
+  });
+
+
+  $("govde").innerHTML=h;
+
+  $("bos").hidden=n>0;
+
+  $("sUrun").textContent=L.length;
+
+  $("sInd").textContent=ind;
+
+  $("sOrt").textContent=
+    L.length
+    ?
+    TL(Math.round(top/L.length))
+    :
+    "0 TL";
+}
+
+
+/* =========================================================
+   ÜRÜN FORMUNU AÇ
+   ========================================================= */
+
+function ac(i){
+
+  duzen=i;
+
+
+  var u=
+    i>=0
+    ?
+    L[i]
+    :
+    {
+      ad:"",
+      kat:"Lastikli Çarşaf",
+      fiyat:"",
+      eski:"",
+      rozet:"",
+      olcu:[],
+      res:[]
+    };
+
+
+  $("fBaslik").textContent=
+    i>=0
+    ?
+    "Ürünü düzenle"
+    :
+    "Yeni ürün";
+
+
+  $("fAd").value=u.ad;
+
+  $("fKat").value=u.kat;
+
+  $("fRozet").value=
+    u.rozet||"";
+
+  $("fFiyat").value=
+    u.fiyat;
+
+  $("fEski").value=
+    u.eski||"";
+
+  $("fOlcu").value=
+    u.olcu.join(", ");
+
+  $("fRes").value=
+    u.res.join(", ");
+
+
+  $("perde").classList.add("acik");
+
+  $("fAd").focus();
+}
+
+
+/* =========================================================
+   FORMU KAPAT
+   ========================================================= */
+
+function kapat(){
+
+  $("perde")
+    .classList
+    .remove("acik");
+}
+
+
+/* =========================================================
+   VİRGÜLLE AYIR
+   ========================================================= */
+
+var liste=function(s){
+
+  return s
+    .split(",")
+    .map(function(x){
+      return x.trim();
+    })
+    .filter(Boolean);
+
+};
+
+
+/* =========================================================
+   ÜRÜN KAYDETME FORMU
+   ========================================================= */
+
+$("form").onsubmit=function(e){
+
+  e.preventDefault();
+
+
+  var u={
+
+    ad:$("fAd")
+      .value
+      .trim(),
+
+    kat:$("fKat")
+      .value,
+
+    fiyat:+$("fFiyat")
+      .value,
+
+    olcu:liste(
+      $("fOlcu").value
+    ),
+
+    res:liste(
+      $("fRes").value
+    )
+
+  };
+
+
+  if(
+    $("fRozet")
+    .value
+    .trim()
+  ){
+
+    u.rozet=
+      $("fRozet")
+      .value
+      .trim();
+
+  }
+
+
+  if($("fEski").value){
+
+    if(
+      +$("fEski").value<=u.fiyat
+    ){
+
+      bil(
+        "Eski fiyat, satış fiyatından yüksek olmalı"
+      );
+
+      return;
+    }
+
+
+    u.eski=
+      +$("fEski").value;
+
+  }
+
+
+  if(duzen>=0){
+
+    L[duzen]=u;
+
+  }else{
+
+    L.push(u);
+
+  }
+
+
+  kaydet();
+
+  kapat();
+
+  bil(
+    duzen>=0
+    ?
+    "Ürün güncellendi"
+    :
+    "Ürün eklendi"
+  );
+
+};
+
+
+/* =========================================================
+   YENİ ÜRÜN
+   ========================================================= */
+
+$("yeni").onclick=function(){
+
+  ac(-1);
+
+};
+
+
+/* =========================================================
+   İPTAL
+   ========================================================= */
+
+$("iptal").onclick=kapat;
+
+
+$("perde").onclick=function(e){
+
+  if(e.target===this){
+    kapat();
+  }
+
+};
+
+
+document.addEventListener(
+  "keydown",
+  function(e){
+
+    if(e.key==="Escape"){
+      kapat();
+    }
+
+  }
+);
+
+
+/* =========================================================
+   ARAMA
+   ========================================================= */
+
+$("ara").oninput=ciz;
+
+
+/* =========================================================
+   DÜZENLE / SİL
+   ========================================================= */
+
+$("govde").onclick=function(e){
+
+  var d=
+    e.target.closest("[data-d]");
+
+  var s=
+    e.target.closest("[data-s]");
+
+
+  if(d){
+
+    ac(
+      +d.dataset.d
+    );
+
+  }
+
+
+  if(
+    s &&
+    confirm(
+      "Bu ürün silinsin mi? "
+    )
+  ){
+
+    L.splice(
+      +s.dataset.s,
+      1
+    );
+
+    kaydet();
+
+    bil(
+      "Ürün silindi"
+    );
+
+  }
+
+};
+
+
+/* =========================================================
+   JSON YEDEK İNDİR
+   ========================================================= */
+
+$("indir").onclick=function(){
+
+  var a=
+    document.createElement("a");
+
+  a.href=
+    URL.createObjectURL(
+      new Blob(
+        [
+          JSON.stringify(
+            L,
+            null,
+            2
+          )
+        ],
+        {
+          type:"application/json"
+        }
+      )
+    );
+
+  a.download=
+    "homenup-urunler.json";
+
+  a.click();
+
+};
+
+
+/* =========================================================
+   JSON YEDEKTEN YÜKLE
+   ========================================================= */
+
+$("yukle").onchange=function(){
+
+  var f=this.files[0];
+
+  if(!f){
+    return;
+  }
+
+
+  var r=
+    new FileReader();
+
+
+  r.onload=function(){
+
+    try{
+
+      var k=
+        JSON.parse(
+          r.result
+        );
+
+
+      if(
+        !Array.isArray(k) ||
+        !k.every(function(u){
+          return u.ad &&
+                 u.fiyat &&
+                 u.olcu &&
+                 u.res;
+        })
+      ){
+
+        throw 0;
+
+      }
+
+
+      L=k;
+
+      kaydet();
+
+      bil(
+        "Yedek yüklendi"
+      );
+
+
+    }catch(x){
+
+      bil(
+        "Geçersiz yedek dosyası"
+      );
+
+    }
+
+  };
+
+
+  r.readAsText(f);
+
+  this.value="";
+
+};
+
+
+/* =========================================================
+   VARSAYILANA DÖN
+   ========================================================= */
+
+$("sifirla").onclick=function(){
+
+  if(
+    confirm(
+      "Tüm değişiklikler silinip ilk ürünler geri gelsin mi?"
+    )
+  ){
+
+    L=
+      JSON.parse(
+        JSON.stringify(
+          VARSAYILAN
+        )
+      );
+
+
+    kaydet();
+
+    bil(
+      "Varsayılana dönüldü"
+    );
+
+  }
+
+};
+
+
+/* =========================================================
+   FIREBASE'DEN ÜRÜNLERİ ÇEK
+   ========================================================= */
+
+katalogRef.get()
+
+.then(function(doc){
+
+  if(doc.exists){
+
+    var veri=
+      doc.data().liste;
+
+
+    /*
+      Daha önce Firestore'da
+      String olarak [] oluşturduysak
+      onu Array'e çeviriyoruz.
+    */
+
+    if(
+      typeof veri==="string"
+    ){
+
+      try{
+
+        veri=
+          JSON.parse(veri);
+
+      }catch(e){
+
+        veri=[];
+
+      }
+
+    }
+
+
+    if(
+      Array.isArray(veri) &&
+      veri.length
+    ){
+
+      L=veri;
+
+
+      localStorage.setItem(
+        KEY,
+        JSON.stringify(L)
+      );
+
+
+      ciz();
+
+    }else{
+
+      /*
+        Firebase'de ürün yoksa
+        mevcut varsayılan ürünleri
+        Firebase'e ilk kez gönder.
+      */
+
+      L=
+        JSON.parse(
+          JSON.stringify(
+            VARSAYILAN
+          )
+        );
+
+
+      return katalogRef.set({
+
+        liste:
+          JSON.parse(
+            JSON.stringify(L)
+          )
+
+      })
+
+      .then(function(){
+
+        localStorage.setItem(
+          KEY,
+          JSON.stringify(L)
+        );
+
+        ciz();
+
+      });
+
+    }
+
+  }else{
+
+    /*
+      katalog belgesi yoksa oluştur.
+    */
+
+    L=
+      JSON.parse(
+        JSON.stringify(
+          VARSAYILAN
+        )
+      );
+
+
+    return katalogRef.set({
+
+      liste:
+        JSON.parse(
+          JSON.stringify(L)
+        )
+
+    })
+
+    .then(function(){
+
+      localStorage.setItem(
+        KEY,
+        JSON.stringify(L)
+      );
+
+      ciz();
+
+    });
+
+  }
+
+
+})
+
+.catch(function(e){
+
+  console.error(
+    "Firebase okuma hatası:",
+    e
+  );
+
+
+  /*
+    Firebase çalışmazsa
+    eski localStorage ürünlerini kullan.
+  */
+
+  L=oku();
+
+  ciz();
+
+  bil(
+    "Firebase'e bağlanılamadı, yerel ürünler kullanılıyor"
+  );
+
+});
+
+
+/* =========================================================
+   YÖNETİCİ GİRİŞİ
+   ========================================================= */
+
+var ADMIN_EMAIL = "berkaydemirer2007@gmail.com"; // <-- 
+var auth = firebase.auth();
+
+function gHata(m){ $("gHata").textContent = m || ""; }
+
+auth.onAuthStateChanged(function (u) {
+  var ok = !!u && u.email === ADMIN_EMAIL;
+  $("giris").classList.toggle("acik", !ok);
+  if (u && !ok) {
+    gHata("Giriş yapıldı ama bu e-posta yönetici e-postası değil (" + u.email + "). admin.html içindeki ADMIN_EMAIL satırını kontrol edin.");
+    auth.signOut();
+  }
+});
+
+var HATALAR = {
+  "auth/invalid-credential": "E-posta veya şifre yanlış ya da bu kullanıcı Firebase'de yok. Şifre, Gmail şifresi değil; Firebase'de belirlediğiniz şifre olmalı.",
+  "auth/wrong-password": "Şifre yanlış.",
+  "auth/user-not-found": "Bu e-posta ile Firebase'de kullanıcı yok. Authentication > Users bölümünden ekleyin.",
+  "auth/invalid-email": "E-posta biçimi geçersiz.",
+  "auth/operation-not-allowed": "Firebase'de Email/Password girişi açık değil. Authentication > Sign-in method bölümünden açın.",
+  "auth/unauthorized-domain": "Bu adres Firebase'de izinli değil. Authentication > Settings > Authorized domains bölümüne bu alan adını ekleyin. Localhost için http://localhost:3000 kullanın.",
+  "auth/operation-not-supported-in-this-environment": "Sayfa dosya olarak açılmış. http://localhost:3000/admin.html adresinden açın.",
+  "auth/network-request-failed": "İnternet bağlantısı ya da ağ hatası.",
+  "auth/too-many-requests": "Çok fazla deneme yapıldı, biraz bekleyip tekrar deneyin.",
+  "auth/invalid-api-key": "Firebase API anahtarı geçersiz."
+};
+
+$("girisForm").onsubmit = function (e) {
+  e.preventDefault();
+  gHata("");
+  $("gBtn").disabled = true;
+  $("gBtn").textContent = "Giriş yapılıyor...";
+  auth.signInWithEmailAndPassword($("gEmail").value.trim(), $("gSifre").value)
+    .catch(function (err) {
+      console.error("Giriş hatası:", err);
+      gHata((HATALAR[err.code] || "Giriş yapılamadı.") + " [" + (err.code || err.message) + "]");
+    })
+    .then(function () {
+      $("gBtn").disabled = false;
+      $("gBtn").textContent = "Giriş yap";
+    });
+};
+
+$("cikis").onclick = function (e) {
+  e.preventDefault();
+  auth.signOut();
+};
+
+</script>
+
+</body>
+</html>

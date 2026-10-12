@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ürün — HOMENUP</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+var firebaseConfig = {
+  apiKey: "AIzaSyDD8d_fqaEEqVLaZoHKxTOAfMGinkPVQrM",
+  authDomain: "homenup-8c6ce.firebaseapp.com",
+  projectId: "homenup-8c6ce",
+  appId: "1:785637094317:web:3692bcc5465a4114422724"
+};
+firebase.initializeApp(firebaseConfig);
+var db = firebase.firestore();
+var katalogRef = db.collection("magaza").doc("katalog");
+</script>
+
+<style>
+:root{--kagit:#FFFFFF;--zemin:#F3F3F1;--murekkep:#16181B;--soluk:#6E7278;--cizgi:#E2E2DE;--vurgu:#1F4B43;--vurgu-yazi:#FFFFFF;--max:1200px;--bosluk:24px;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--kagit:#121316;--zemin:#1A1C20;--murekkep:#ECECEA;--soluk:#9A9EA4;--cizgi:#2A2D32;--vurgu:#6FBBA8;--vurgu-yazi:#101314}}
+:root[data-theme="dark"]{--kagit:#121316;--zemin:#1A1C20;--murekkep:#ECECEA;--soluk:#9A9EA4;--cizgi:#2A2D32;--vurgu:#6FBBA8;--vurgu-yazi:#101314}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--kagit);color:var(--murekkep);font-family:"Instrument Sans",-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--vurgu);outline-offset:3px}
+.kap{max-width:var(--max);margin:0 auto;padding:0 var(--bosluk)}
+.ust{border-bottom:1px solid var(--cizgi);position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--kagit)}
+.ust .kap{display:flex;align-items:center;gap:28px;height:68px}
+.logo{font-family:"Instrument Serif",Georgia,serif;font-size:26px;letter-spacing:-.01em}
+.menu{display:flex;gap:22px;font-size:15px;color:var(--soluk);margin-left:auto}
+.menu a:hover{color:var(--murekkep)}
+.sepet{border:1px solid var(--cizgi);border-radius:999px;padding:7px 16px;font-size:14px;background:transparent;color:inherit;flex-shrink:0}
+.hesap{border:1px solid var(--cizgi);border-radius:999px;padding:7px 16px;font-size:14px;white-space:nowrap;background:transparent;color:inherit;cursor:pointer;font-family:inherit;flex-shrink:0;max-width:200px;overflow:hidden;text-overflow:ellipsis;margin-left:-14px}
+.hesap:hover{background:var(--zemin)}
+@media(max-width:720px){.menu{display:none}.hesap{margin-left:auto}.sepet{margin-left:0}}
+.yol{font-size:14px;color:var(--soluk);padding:22px 0 18px}
+.yol a:hover{color:var(--murekkep)}
+.detay{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;padding-bottom:72px}
+@media(max-width:860px){.detay{grid-template-columns:1fr;gap:28px}}
+.galeri{display:grid;grid-template-columns:76px 1fr;gap:14px;align-items:start}
+.seritler{display:flex;flex-direction:column;gap:10px}
+.kucuk{aspect-ratio:1/1;border:1px solid var(--cizgi);background:var(--zemin);padding:0;overflow:hidden;opacity:.65}
+.kucuk.aktif{opacity:1;border-color:var(--murekkep)}
+.kucuk img{width:100%;height:100%;object-fit:cover}
+.ana{position:relative;aspect-ratio:1/1;background:var(--zemin);border:1px solid var(--cizgi);overflow:hidden;touch-action:pan-y}
+.kayan{display:flex;height:100%;transition:transform .35s ease}
+.kayan img{min-width:100%;height:100%;object-fit:cover;user-select:none;-webkit-user-drag:none}
+.ok{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:1px solid var(--cizgi);background:var(--kagit);color:var(--murekkep);font-size:18px;line-height:1}
+.ok.sol{left:12px}.ok.sag{right:12px}
+.sayac{position:absolute;right:12px;bottom:12px;background:var(--kagit);border:1px solid var(--cizgi);font-size:12px;padding:3px 10px;border-radius:999px}
+.rozet{position:absolute;top:12px;left:12px;background:var(--murekkep);color:var(--kagit);font-size:12px;padding:4px 9px;border-radius:3px;z-index:2}
+@media(max-width:560px){.galeri{grid-template-columns:1fr}.seritler{flex-direction:row;order:2;overflow-x:auto}.kucuk{width:64px;flex-shrink:0}}
+.bilgi h1{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:clamp(28px,3.6vw,40px);line-height:1.1;letter-spacing:-.015em;margin:0 0 12px}
+.puan{font-size:14px;color:var(--soluk);margin:0 0 20px}
+.puan b{color:var(--murekkep);font-weight:600}
+.fiyat{display:flex;align-items:baseline;gap:12px;margin:0 0 6px}
+.fiyat .yeni{font-size:30px;font-weight:600}
+.fiyat .eski{color:var(--soluk);text-decoration:line-through}
+.not{font-size:14px;color:var(--soluk);margin:0 0 24px;padding-bottom:24px;border-bottom:1px solid var(--cizgi)}
+.etiket{font-size:14px;font-weight:600;margin:0 0 10px}
+.secenek{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.secenek button{border:1px solid var(--cizgi);background:var(--kagit);color:var(--murekkep);padding:9px 16px;font-size:14px;border-radius:4px}
+.secenek button.aktif{border-color:var(--vurgu);background:var(--vurgu);color:var(--vurgu-yazi)}
+.adet{display:inline-flex;border:1px solid var(--cizgi);border-radius:4px;margin-bottom:24px}
+.adet button{width:42px;height:42px;border:0;background:transparent;color:var(--murekkep);font-size:18px}
+.adet span{min-width:38px;text-align:center;align-self:center;font-weight:500}
+.butonlar{display:flex;gap:12px}
+.b{flex:1;padding:15px 20px;border-radius:4px;font-weight:500;font-size:15px;border:1px solid var(--vurgu)}
+.b.dolu{background:var(--vurgu);color:var(--vurgu-yazi)}
+.b.cerceve{background:transparent;color:var(--vurgu)}
+.b:hover{filter:brightness(1.08)}
+.teslimat{margin-top:28px;border:1px solid var(--cizgi);background:var(--zemin)}
+.teslimat div{padding:14px 18px;font-size:14px;display:flex;justify-content:space-between;gap:16px}
+.teslimat div+div{border-top:1px solid var(--cizgi)}
+.teslimat span{color:var(--soluk)}
+.aciklama{margin-top:28px;color:var(--soluk);font-size:15px;max-width:60ch}
+.aciklama h3{color:var(--murekkep);font-size:15px;margin:0 0 8px}
+.perde{position:fixed;inset:0;background:rgba(0,0,0,.4);opacity:0;visibility:hidden;transition:.25s;z-index:40}
+.cekmece{position:fixed;top:0;right:0;bottom:0;width:min(400px,100%);background:var(--kagit);border-left:1px solid var(--cizgi);transform:translateX(100%);transition:transform .3s ease;z-index:50;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body.acik .perde{opacity:1;visibility:visible}body.acik .cekmece{transform:none}
+.c-bas{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--cizgi);font-family:"Instrument Serif",Georgia,serif;font-size:24px}
+.c-bas button{border:0;background:none;color:inherit;font-size:22px}
+.c-liste{flex:1;overflow:auto;padding:8px 22px}
+.c-satir{display:grid;grid-template-columns:64px 1fr auto;gap:14px;padding:16px 0;border-bottom:1px solid var(--cizgi);font-size:14px}
+.c-satir img{width:64px;height:64px;object-fit:cover;background:var(--zemin)}
+.c-satir p{margin:0}.c-satir .k{color:var(--soluk)}
+.c-satir button{border:0;background:none;color:var(--soluk);font-size:13px;padding:0;text-decoration:underline;margin-top:4px}
+.c-bos{color:var(--soluk);padding:32px 0;text-align:center}
+.c-alt{padding:18px 22px;border-top:1px solid var(--cizgi)}
+.c-toplam{display:flex;justify-content:space-between;font-weight:600;margin-bottom:14px}
+.c-alt .b{width:100%}
+.bildirim{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--murekkep);color:var(--kagit);padding:12px 20px;border-radius:4px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60}
+.bildirim.goster{opacity:1;transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+
+<body>
+
+<header class="ust">
+<div class="kap">
+
+<a href="homen3.html" class="logo">HOMENUP</a>
+
+<nav class="menu">
+<a href="kategori.html">Lastikli Çarşaf</a>
+<a href="kategori2.html">Nevresim Takımı</a>
+<a href="alez2.html">Alez</a>
+<a href="pestemal.html">Peştemal Panço</a>
+<a href="indirim.html">İndirim</a>
+</nav>
+
+<button class="hesap" id="hesapBtn">Giriş Yap</button>
+
+<button class="sepet" id="sepetBtn" onclick="window.open('odeme.html', '_blank')">
+  Sepet (0)
+</button>
+
+</div>
+</header>
+
+<main class="kap">
+
+<div class="yol">
+<a href="homen3.html">Ana sayfa</a> /
+<span id="yolKat"></span> /
+<span id="yolAd"></span>
+</div>
+
+<div class="detay">
+
+<div class="galeri">
+<div class="seritler" id="kucukler"></div>
+<div class="ana" id="ana">
+<span class="rozet" id="rozet" hidden></span>
+<div class="kayan" id="kayan"></div>
+<button class="ok sol" id="geri" aria-label="Önceki fotoğraf">‹</button>
+<button class="ok sag" id="ileri" aria-label="Sonraki fotoğraf">›</button>
+<span class="sayac" id="sayac"></span>
+</div>
+</div>
+
+<div class="bilgi">
+
+<h1 id="ad"></h1>
+
+<p class="puan"><b></b> </p>
+
+<div class="fiyat">
+<span class="yeni" id="yeni"></span>
+<span class="eski" id="eski"></span>
+</div>
+
+<p class="not">
+İki al, ikincisinde %10 indirim · 1.000 TL üzeri ücretsiz kargo
+</p>
+
+<p class="etiket">Beden / ölçü</p>
+
+<div class="secenek" id="olculer"></div>
+
+<p class="etiket">Adet</p>
+
+<div class="adet">
+<button id="eksi" aria-label="Azalt">−</button>
+<span id="adet">1</span>
+<button id="arti" aria-label="Artır">+</button>
+</div>
+
+<div class="butonlar">
+<button class="b cerceve" id="simdi">Şimdi al</button>
+<button class="b dolu" id="ekle">Sepete ekle</button>
+</div>
+
+<div class="teslimat">
+<div>Kargo <span>Aynı gün · 14:00'a kadar verilen siparişler</span></div>
+<div>İade <span>14 gün içinde ücretsiz</span></div>
+<div>Ödeme <span>Tüm kartlara taksit</span></div>
+</div>
+
+<div class="aciklama">
+<h3>Ürün açıklaması</h3>
+<p>
+Denizli'de üretilen, yıkandıkça yumuşayan pamuklu kumaş. Solmaz, çekmez ve uzun yıllar kullanılır.
+</p>
+</div>
+
+</div>
+
+</div>
+
+</main>
+
+<div class="perde" id="perde"></div>
+
+<aside class="cekmece" aria-label="Sepet">
+
+<div class="c-bas">
+Sepetim
+<button id="kapat" aria-label="Kapat">×</button>
+</div>
+
+<div class="c-liste" id="liste"></div>
+
+<div class="c-alt">
+<div class="c-toplam">
+<span>Toplam</span>
+<span id="toplam">0 TL</span>
+</div>
+<button class="b dolu" id="ode">Siparişi tamamla</button>
+</div>
+
+</aside>
+
+<div class="bildirim" id="bildirim" role="status"></div>
+
+<script>
+
+/* ---------- TEMEL ---------- */
+
+var $=function(i){
+  return document.getElementById(i);
+};
+
+var TL=function(n){
+  return Number(n || 0).toLocaleString("tr-TR")+" TL";
+};
+
+/* URL'deki ürün ID'si */
+
+var id=parseInt(
+  new URLSearchParams(location.search).get("id"),
+  10
+) || 1;
+
+/* ---------- FIREBASE ÜRÜNÜNÜ ÇEK ---------- */
+
+katalogRef.get().then(function(doc){
+
+  var liste=[];
+
+  if(doc.exists){
+
+    var veri=doc.data().liste;
+
+    if(typeof veri==="string"){
+      try{
+        veri=JSON.parse(veri);
+      }catch(e){
+        veri=[];
+      }
+    }
+
+    if(Array.isArray(veri)){
+      liste=veri;
+    }
+
+  }
+
+  /* Firebase'de liste bulunamazsa boş ürün listesi kullan. */
+
+  if(!liste.length){
+
+    document.querySelector(".detay").innerHTML=
+      '<div style="grid-column:1/-1;padding:60px 0;text-align:center;color:var(--soluk)">Ürün bulunamadı.</div>';
+
+    return;
+
+  }
+
+  /* id=1 ise listenin ilk ürünü, id=2 ise ikinci ürünü vb. */
+
+  var u=liste[id-1];
+
+  if(!u){
+
+    document.querySelector(".detay").innerHTML=
+      '<div style="grid-column:1/-1;padding:60px 0;text-align:center;color:var(--soluk)">Ürün bulunamadı.</div>';
+
+    return;
+
+  }
+
+  var idx=0;
+  var adet=1;
+  var olcu=(u.olcu && u.olcu.length) ? u.olcu[0] : "";
+
+  /* ---------- ÜRÜN BİLGİLERİ ---------- */
+
+  document.title=u.ad+" — HOMENUP";
+  $("ad").textContent=u.ad;
+  $("yolKat").textContent=u.kat || "";
+  $("yolAd").textContent=u.ad;
+  $("yeni").textContent=TL(u.fiyat);
+
+  if(u.eski){
+    $("eski").textContent=TL(u.eski);
+  }else{
+    $("eski").textContent="";
+  }
+
+  if(u.rozet){
+    $("rozet").hidden=false;
+    $("rozet").textContent=u.rozet;
+  }
+
+  /* ---------- GALERİ ---------- */
+
+  var res=u.res || [];
+
+  if(!res.length){
+    res=[""];
+  }
+
+  $("kayan").innerHTML=res.map(function(r){
+    return '<img src="'+r+'" alt="'+u.ad+'" draggable="false" onerror="this.style.visibility=\'hidden\'">';
+  }).join("");
+
+  $("kucukler").innerHTML=res.map(function(r,i){
+    return '<button class="kucuk" data-i="'+i+'" aria-label="Fotoğraf '+(i+1)+'"><img src="'+r+'" alt="" onerror="this.style.visibility=\'hidden\'"></button>';
+  }).join("");
+
+  function git(i){
+
+    idx=(i+res.length)%res.length;
+
+    $("kayan").style.transform="translateX(-"+idx*100+"%)";
+
+    $("sayac").textContent=(idx+1)+" / "+res.length;
+
+    document.querySelectorAll(".kucuk").forEach(function(k,j){
+      k.classList.toggle("aktif",j===idx);
+    });
+
+  }
+
+  $("geri").onclick=function(){
+    git(idx-1);
+  };
+
+  $("ileri").onclick=function(){
+    git(idx+1);
+  };
+
+  $("kucukler").onclick=function(e){
+    var b=e.target.closest(".kucuk");
+    if(b){
+      git(+b.dataset.i);
+    }
+  };
+
+  document.addEventListener("keydown",function(e){
+    if(e.key==="ArrowLeft") git(idx-1);
+    if(e.key==="ArrowRight") git(idx+1);
+    if(e.key==="Escape") cekmece(false);
+  });
+
+  /* ---------- DOKUNMATİK KAYDIRMA ---------- */
+
+  var x0=null;
+  var ana=$("ana");
+
+  ana.addEventListener("pointerdown",function(e){
+    x0=e.clientX;
+  });
+
+  ana.addEventListener("pointerup",function(e){
+
+    if(x0===null)return;
+
+    var d=e.clientX-x0;
+    x0=null;
+
+    if(Math.abs(d)>40){
+      git(d<0 ? idx+1 : idx-1);
+    }
+
+  });
+
+  ana.addEventListener("pointercancel",function(){
+    x0=null;
+  });
+
+  git(0);
+
+  if(res.length<2){
+    $("geri").hidden=true;
+    $("ileri").hidden=true;
+    $("sayac").hidden=true;
+  }
+
+  /* ---------- ÖLÇÜ ---------- */
+
+  var olculer=u.olcu || [];
+
+  $("olculer").innerHTML=olculer.map(function(o,i){
+    return '<button class="'+(i?'':'aktif')+'" data-o="'+o+'">'+o+'</button>';
+  }).join("");
+
+  $("olculer").onclick=function(e){
+
+    var b=e.target.closest("button");
+
+    if(!b)return;
+
+    olcu=b.dataset.o;
+
+    this.querySelectorAll("button").forEach(function(x){
+      x.classList.toggle("aktif",x===b);
+    });
+
+  };
+
+  /* ---------- ADET ---------- */
+
+  $("eksi").onclick=function(){
+    adet=Math.max(1,adet-1);
+    $("adet").textContent=adet;
+  };
+
+  $("arti").onclick=function(){
+    adet=Math.min(10,adet+1);
+    $("adet").textContent=adet;
+  };
+
+  /* ---------- SEPET ---------- */
+
+  function oku(){
+
+    try{
+      return JSON.parse(
+        localStorage.getItem("homenup_sepet") || "[]"
+      );
+    }catch(e){
+      return [];
+    }
+
+  }
+
+  function yaz(s){
+
+    try{
+      localStorage.setItem(
+        "homenup_sepet",
+        JSON.stringify(s)
+      );
+    }catch(e){}
+
+    window._s=s;
+
+    ciz();
+
+  }
+
+  window._s=oku();
+
+  function ciz(){
+
+    var s=window._s;
+    var n=0;
+    var t=0;
+
+    s.forEach(function(k){
+      n+=k.adet;
+      t+=k.adet*k.fiyat;
+    });
+
+    $("sepetBtn").textContent="Sepet ("+n+")";
+
+    $("toplam").textContent=TL(t);
+
+    $("liste").innerHTML=s.length
+
+      ? s.map(function(k,i){
+
+          return '<div class="c-satir">'+
+          '<img src="'+k.res+'" alt="">'+
+          '<div>'+
+          '<p>'+k.ad+'</p>'+
+          '<p class="k">'+k.olcu+' · '+k.adet+' adet</p>'+
+          '<button data-sil="'+i+'">Kaldır</button>'+
+          '</div>'+
+          '<p>'+TL(k.fiyat*k.adet)+'</p>'+
+          '</div>';
+
+        }).join("")
+
+      : '<p class="c-bos">Sepetin boş.</p>';
+
+  }
+
+  $("liste").onclick=function(e){
+
+    var b=e.target.closest("[data-sil]");
+
+    if(!b)return;
+
+    var s=window._s.slice();
+
+    s.splice(+b.dataset.sil,1);
+
+    yaz(s);
+
+  };
+
+  function ekle(){
+
+    var s=window._s.slice();
+
+    var k=s.find(function(x){
+      return x.id===id && x.olcu===olcu;
+    });
+
+    if(k){
+      k.adet=Math.min(10,k.adet+adet);
+    }else{
+      s.push({
+        id:id,
+        ad:u.ad,
+        olcu:olcu,
+        adet:adet,
+        fiyat:u.fiyat,
+        res:res[0]
+      });
+    }
+
+    yaz(s);
+
+  }
+
+  function bildir(m){
+
+    var b=$("bildirim");
+
+    b.textContent=m;
+    b.classList.add("goster");
+
+    clearTimeout(bildir.t);
+
+    bildir.t=setTimeout(function(){
+      b.classList.remove("goster");
+    },2200);
+
+  }
+
+  function cekmece(a){
+    document.body.classList.toggle("acik",a);
+  }
+
+  $("ekle").onclick=function(){
+    ekle();
+    bildir("Sepete eklendi");
+  };
+
+  $("simdi").onclick=function(){
+    ekle();
+    cekmece(true);
+  };
+
+  $("sepetBtn").onclick=function(){
+    cekmece(true);
+  };
+
+  $("kapat").onclick=function(){
+    cekmece(false);
+  };
+
+  $("perde").onclick=function(){
+    cekmece(false);
+  };
+
+  $("ode").onclick=function(){
+
+    if(!window._s.length){
+      bildir("Önce sepete ürün ekle");
+      return;
+    }
+
+    location.href="odeme.html";
+
+  };
+
+  ciz();
+
+}).catch(function(error){
+
+  console.error(
+    "Firebase ürünleri alınamadı:",
+    error
+  );
+
+  document.querySelector(".detay").innerHTML=
+    '<div style="grid-column:1/-1;padding:60px 0;text-align:center;color:var(--soluk)">Ürün bilgileri yüklenemedi.</div>';
+
+});
+
+</script>
+<script>
+function sepetiYukle() {
+
+  var sepet = [];
+
+  try {
+    sepet = JSON.parse(
+      localStorage.getItem("homenup_sepet") || "[]"
+    );
+  } catch(e) {
+    sepet = [];
+  }
+
+  var toplamAdet = 0;
+
+  sepet.forEach(function(urun) {
+    toplamAdet += Number(urun.adet || 0);
+  });
+
+  var sepetBtn = document.querySelector(".sepet");
+
+  if (sepetBtn) {
+    sepetBtn.textContent = "Sepet (" + toplamAdet + ")";
+  }
+}
+
+sepetiYukle();
+
+window.addEventListener("storage", function(e) {
+
+  if (e.key === "homenup_sepet") {
+    sepetiYukle();
+  }
+
+});
+</script>
+
+<!-- GİRİŞ / KAYIT (modal, CSS ve Firebase Auth hesap.js içinde) -->
+<script src="hesap.js"></script>
+
+</body>
+</html>

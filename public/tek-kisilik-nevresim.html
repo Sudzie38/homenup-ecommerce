@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HOMENUP — Tek Kişilik Nevresim Takımı</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="stil.css">
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+var firebaseConfig = {
+  apiKey: "AIzaSyDD8d_fqaEEqVLaZoHKxTOAfMGinkPVQrM",
+  authDomain: "homenup-8c6ce.firebaseapp.com",
+  projectId: "homenup-8c6ce",
+  appId: "1:785637094317:web:3692bcc5465a4114422724"
+};
+firebase.initializeApp(firebaseConfig);
+var db = firebase.firestore();
+var katalogRef = db.collection("magaza").doc("katalog");
+</script>
+
+<style>
+/* HESAP DÜĞMESİ */
+.hesap{border:1px solid var(--cizgi);border-radius:999px;padding:7px 16px;font-size:14px;white-space:nowrap;background:transparent;color:inherit;cursor:pointer;font-family:inherit;flex-shrink:0;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+.hesap:hover{background:var(--zemin)}
+
+/* POPUP */
+.urun-popup-perde{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;visibility:hidden;transition:.25s;z-index:1000}
+.urun-popup-perde.acik{opacity:1;visibility:visible}
+.urun-popup{position:fixed;left:50%;top:50%;transform:translate(-50%,-48%);width:min(1000px,calc(100% - 30px));max-height:calc(100vh - 30px);overflow:auto;background:var(--kagit);border:1px solid var(--cizgi);border-radius:8px;opacity:0;visibility:hidden;transition:.25s;z-index:1001}
+.urun-popup.acik{opacity:1;visibility:visible;transform:translate(-50%,-50%)}
+.popup-kapat{position:absolute;right:16px;top:16px;width:40px;height:40px;border-radius:50%;border:1px solid var(--cizgi);background:var(--kagit);color:var(--murekkep);font-size:24px;z-index:5}
+.popup-icerik{display:grid;grid-template-columns:1fr 1fr;gap:35px;padding:28px}
+@media(max-width:760px){.popup-icerik{grid-template-columns:1fr;padding:18px}}
+
+/* POPUP FOTOĞRAF */
+.popup-galeri{display:grid;grid-template-columns:70px 1fr;gap:12px}
+.popup-kucukler{display:flex;flex-direction:column;gap:8px}
+.popup-kucuk{width:70px;height:70px;padding:0;border:1px solid var(--cizgi);background:var(--zemin);overflow:hidden;cursor:pointer;opacity:.55}
+.popup-kucuk.aktif{opacity:1;border-color:var(--murekkep)}
+.popup-kucuk img{width:100%;height:100%;object-fit:cover}
+.popup-ana{position:relative;aspect-ratio:1/1;background:var(--zemin);overflow:hidden}
+.popup-ana img{width:100%;height:100%;object-fit:cover}
+.popup-ok{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:1px solid var(--cizgi);background:var(--kagit);color:var(--murekkep);font-size:20px;cursor:pointer}
+.popup-ok.sol{left:12px}
+.popup-ok.sag{right:12px}
+
+/* POPUP BİLGİ */
+.popup-bilgi{padding:10px 10px 10px 0}
+.popup-kategori{color:var(--soluk);font-size:14px;margin-bottom:12px}
+.popup-ad{font-family:"Instrument Serif",Georgia,serif;font-size:clamp(30px,4vw,42px);font-weight:400;line-height:1.1;margin:0 0 18px}
+.popup-fiyat{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
+.popup-yeni{font-size:30px;font-weight:600}
+.popup-eski{color:var(--soluk);text-decoration:line-through}
+.popup-not{color:var(--soluk);font-size:14px;border-bottom:1px solid var(--cizgi);padding-bottom:20px;margin-bottom:22px}
+.popup-etiket{font-size:14px;font-weight:600;margin:0 0 10px}
+.popup-olculer{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.popup-olculer button{border:1px solid var(--cizgi);background:var(--kagit);color:var(--murekkep);padding:9px 15px;border-radius:4px;font-size:14px;cursor:pointer}
+.popup-olculer button.aktif{background:var(--vurgu);border-color:var(--vurgu);color:var(--vurgu-yazi)}
+
+/* ADET */
+.popup-adet{display:inline-flex;border:1px solid var(--cizgi);border-radius:4px;margin-bottom:24px}
+.popup-adet button{width:42px;height:42px;border:0;background:transparent;color:var(--murekkep);font-size:18px;cursor:pointer}
+.popup-adet span{min-width:42px;text-align:center;align-self:center;font-weight:500}
+
+/* BUTONLAR */
+.popup-butonlar{display:flex;gap:10px}
+.popup-buton{flex:1;padding:15px 18px;border-radius:4px;font-size:15px;font-weight:500;cursor:pointer}
+.popup-simdi{background:transparent;color:var(--vurgu);border:1px solid var(--vurgu)}
+.popup-ekle{background:var(--vurgu);color:var(--vurgu-yazi);border:1px solid var(--vurgu)}
+.popup-buton:hover{filter:brightness(1.08)}
+
+/* TESLİMAT */
+.popup-teslimat{margin-top:25px;border:1px solid var(--cizgi);background:var(--zemin)}
+.popup-teslimat div{padding:12px 15px;display:flex;justify-content:space-between;gap:12px;font-size:13px}
+.popup-teslimat div+div{border-top:1px solid var(--cizgi)}
+.popup-teslimat span{color:var(--soluk);text-align:right}
+
+/* BİLDİRİM */
+.popup-bildirim{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--murekkep);color:var(--kagit);padding:12px 20px;border-radius:4px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:2000}
+.popup-bildirim.goster{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+
+<body>
+
+<header class="ust">
+  <div class="kap">
+
+    <a href="homen3.html" class="logo">HOMENUP</a>
+
+    <button class="hamburger" aria-label="Menüyü aç" aria-expanded="false" aria-controls="menu">
+      <span></span>
+    </button>
+
+    <nav id="menu" class="menu" aria-label="Ana menü">
+      <ul>
+        <li><a href="kategori.html?k=yeni"></a></li>
+
+        <li class="alt-var"><a href="kategori.html">Lastikli Çarşaf</a></li>
+
+        <li class="alt-var">
+          <a href="kategori2.html">Nevresim Takımı</a>
+          <ul class="alt">
+            <li><a href="tek-kisilik-nevresim.html">Tek Kişilik</a></li>
+            <li><a href="cift-kisilik-nevresim.html">Çift Kişilik</a></li>
+          </ul>
+        </li>
+
+        <li class="alt-var"><a href="alez2.html">Alez</a></li>
+        <li><a href="pestemal.html">Peştemal Panço</a></li>
+        <li><a href="indirim.html">İndirim</a></li>
+      </ul>
+    </nav>
+
+    <button class="hesap" id="hesapBtn">Giriş Yap</button>
+
+    <button class="sepet" id="sepetBtn" onclick="window.open('odeme.html', '_blank')">
+      Sepet (0)
+    </button>
+
+  </div>
+</header>
+
+<main class="kap">
+
+  <div class="sayfa-bas">
+    <div class="yol">
+      <a href="homen3.html">Ana sayfa</a> /
+      <span id="yol-ad">Tek Kişilik Nevresim Takımı</span>
+    </div>
+    <h1 id="baslik">Tek Kişilik Nevresim Takımı</h1>
+    <p id="aciklama">Ürünler</p>
+  </div>
+
+  <section class="bolum" style="padding-top:32px">
+    <div class="urunler" id="liste">
+      <p>Ürünler yükleniyor...</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="kap">
+    <div class="f-alt" style="margin:0;padding:0;border:0">
+      © 2026 Mağaza. Tüm hakları saklıdır.
+    </div>
+  </div>
+</footer>
+
+<!-- POPUP -->
+<div class="urun-popup-perde" id="popupPerde"></div>
+
+<div class="urun-popup" id="urunPopup">
+
+  <button class="popup-kapat" id="popupKapat">×</button>
+
+  <div class="popup-icerik">
+
+    <!-- FOTOĞRAFLAR -->
+    <div class="popup-galeri">
+      <div class="popup-kucukler" id="popupKucukler"></div>
+      <div class="popup-ana">
+        <img id="popupAnaResim" src="" alt="">
+        <button class="popup-ok sol" id="popupGeri">‹</button>
+        <button class="popup-ok sag" id="popupIleri">›</button>
+      </div>
+    </div>
+
+    <!-- ÜRÜN BİLGİLERİ -->
+    <div class="popup-bilgi">
+
+      <div class="popup-kategori" id="popupKategori"></div>
+      <h2 class="popup-ad" id="popupAd"></h2>
+
+      <div class="popup-fiyat">
+        <span class="popup-yeni" id="popupYeni"></span>
+        <span class="popup-eski" id="popupEski"></span>
+      </div>
+
+      <p class="popup-not">
+        İki al, ikincisinde %10 indirim · 1.000 TL üzeri ücretsiz kargo
+      </p>
+
+      <p class="popup-etiket">Beden / ölçü</p>
+      <div class="popup-olculer" id="popupOlculer"></div>
+
+      <p class="popup-etiket">Adet</p>
+      <div class="popup-adet">
+        <button id="popupEksi">−</button>
+        <span id="popupAdet">1</span>
+        <button id="popupArti">+</button>
+      </div>
+
+      <div class="popup-butonlar">
+        <button class="popup-buton popup-simdi" id="popupSimdi">Şimdi al</button>
+        <button class="popup-buton popup-ekle" id="popupEkle">Sepete Ekle</button>
+      </div>
+
+      <div class="popup-teslimat">
+        <div>Kargo <span>Aynı gün · 14:00'a kadar verilen siparişler</span></div>
+        <div>İade <span>14 gün içinde ücretsiz</span></div>
+        <div>Ödeme <span>Tüm kartlara taksit</span></div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- BİLDİRİM -->
+<div class="popup-bildirim" id="bildirim"></div>
+
+<script src="menu.js"></script>
+
+<script>
+/* TEMEL */
+var listeDiv=document.getElementById("liste");
+var popup=document.getElementById("urunPopup");
+var popupPerde=document.getElementById("popupPerde");
+var seciliUrun=null;
+var seciliIndex=null;
+var fotoIndex=0;
+var seciliOlcu="";
+var urunAdet=1;
+
+function TL(n){
+  return Number(n || 0).toLocaleString("tr-TR")+" TL";
+}
+
+/* SEPET */
+var sepet=[];
+try{
+  sepet=JSON.parse(localStorage.getItem("homenup_sepet") || "[]");
+}catch(e){
+  sepet=[];
+}
+
+function sepetKaydet(){
+  localStorage.setItem("homenup_sepet",JSON.stringify(sepet));
+  sepetCiz();
+}
+
+function sepetCiz(){
+  var toplamAdet=0;
+  sepet.forEach(function(u){ toplamAdet+=Number(u.adet || 0); });
+  document.getElementById("sepetBtn").textContent="Sepet ("+toplamAdet+")";
+}
+sepetCiz();
+
+/* BİLDİRİM */
+function bildir(m){
+  var b=document.getElementById("bildirim");
+  b.textContent=m;
+  b.classList.add("goster");
+  clearTimeout(b._timer);
+  b._timer=setTimeout(function(){ b.classList.remove("goster"); },2200);
+}
+
+/* POPUP AÇ */
+function popupAc(urun,index){
+  seciliUrun=urun;
+  seciliIndex=index;
+  fotoIndex=0;
+  urunAdet=1;
+
+  var olculer=urun.olcu || [];
+  seciliOlcu=olculer.length ? olculer[0] : "";
+
+  document.getElementById("popupKategori").textContent=urun.kat || "Tek Kişilik Nevresim Takımı";
+  document.getElementById("popupAd").textContent=urun.ad || "Ürün";
+  document.getElementById("popupYeni").textContent=TL(urun.fiyat);
+  document.getElementById("popupEski").textContent=urun.eski ? TL(urun.eski) : "";
+  document.getElementById("popupAdet").textContent="1";
+
+  /* ÖLÇÜLER */
+  var olcuDiv=document.getElementById("popupOlculer");
+  if(olculer.length){
+    olcuDiv.innerHTML=olculer.map(function(o,i){
+      return '<button class="'+(i===0 ? "aktif" : "")+'" data-olcu="'+o+'">'+o+'</button>';
+    }).join("");
+  }else{
+    olcuDiv.innerHTML='<span style="color:var(--soluk);font-size:14px">Ölçü seçeneği bulunmuyor.</span>';
+  }
+
+  olcuDiv.onclick=function(e){
+    var btn=e.target.closest("button");
+    if(!btn)return;
+    seciliOlcu=btn.dataset.olcu;
+    olcuDiv.querySelectorAll("button").forEach(function(b){
+      b.classList.toggle("aktif",b===btn);
+    });
+  };
+
+  /* FOTOĞRAFLAR */
+  var res=urun.res || [];
+  if(!res.length){ res=[""]; }
+
+  document.getElementById("popupAnaResim").src=res[0];
+  document.getElementById("popupAnaResim").alt=urun.ad || "";
+
+  document.getElementById("popupKucukler").innerHTML=res.map(function(r,i){
+    return '<button class="popup-kucuk '+(i===0 ? "aktif" : "")+'" data-foto="'+i+'"><img src="'+r+'" alt=""></button>';
+  }).join("");
+
+  document.getElementById("popupKucukler").onclick=function(e){
+    var btn=e.target.closest("[data-foto]");
+    if(!btn)return;
+    popupFoto(Number(btn.dataset.foto));
+  };
+
+  popupFoto(0);
+
+  popupPerde.classList.add("acik");
+  popup.classList.add("acik");
+  document.body.style.overflow="hidden";
+}
+
+/* FOTOĞRAF DEĞİŞTİR */
+function popupFoto(i){
+  if(!seciliUrun)return;
+  var res=seciliUrun.res || [];
+  if(!res.length){ res=[""]; }
+
+  fotoIndex=(i+res.length)%res.length;
+  document.getElementById("popupAnaResim").src=res[fotoIndex];
+
+  document.querySelectorAll(".popup-kucuk").forEach(function(btn,j){
+    btn.classList.toggle("aktif",j===fotoIndex);
+  });
+}
+
+document.getElementById("popupGeri").onclick=function(){ popupFoto(fotoIndex-1); };
+document.getElementById("popupIleri").onclick=function(){ popupFoto(fotoIndex+1); };
+
+/* POPUP KAPAT */
+function popupKapat(){
+  popup.classList.remove("acik");
+  popupPerde.classList.remove("acik");
+  document.body.style.overflow="";
+}
+
+document.getElementById("popupKapat").onclick=popupKapat;
+popupPerde.onclick=popupKapat;
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape"){ popupKapat(); }
+});
+
+/* ADET */
+document.getElementById("popupEksi").onclick=function(){
+  urunAdet=Math.max(1,urunAdet-1);
+  document.getElementById("popupAdet").textContent=urunAdet;
+};
+
+document.getElementById("popupArti").onclick=function(){
+  urunAdet=Math.min(10,urunAdet+1);
+  document.getElementById("popupAdet").textContent=urunAdet;
+};
+
+/* SEPETE EKLE */
+function sepeteEkle(){
+  if(!seciliUrun)return;
+
+  var mevcut=sepet.find(function(u){
+    return (u.id===seciliIndex && u.olcu===seciliOlcu);
+  });
+
+  if(mevcut){
+    mevcut.adet=Math.min(10,Number(mevcut.adet)+urunAdet);
+  }else{
+    var res=seciliUrun.res || [];
+    sepet.push({
+      id:seciliIndex,
+      ad:seciliUrun.ad,
+      olcu:seciliOlcu,
+      adet:urunAdet,
+      fiyat:Number(seciliUrun.fiyat || 0),
+      res:res[0] || ""
+    });
+  }
+
+  sepetKaydet();
+  bildir("Ürün sepete eklendi");
+}
+
+document.getElementById("popupEkle").onclick=function(){ sepeteEkle(); };
+
+document.getElementById("popupSimdi").onclick=function(){
+  sepeteEkle();
+  popupKapat();
+};
+
+/* FIREBASE */
+katalogRef.get().then(function(doc){
+
+  var tumListe=[];
+
+  if(doc.exists){
+    var veri=doc.data().liste;
+    if(typeof veri==="string"){
+      try{ veri=JSON.parse(veri); }catch(e){ veri=[]; }
+    }
+    if(Array.isArray(veri)){ tumListe=veri; }
+  }
+
+  listeDiv.innerHTML="";
+
+  /* index kaybedilmiyor: sepetteki ürün Firebase'deki doğru ürünle eşleşir */
+  tumListe.forEach(function(urun,index){
+
+    if(urun.kat !== "Tek Kişilik Nevresim Takımı"){ return; }
+
+    var res=urun.res || [];
+    var ilkResim=res.length ? res[0] : "";
+
+    var kart=document.createElement("a");
+    kart.href="#";
+    kart.className="urun";
+
+    kart.innerHTML=
+      '<div class="kare">'+
+        '<img src="'+ilkResim+'" alt="'+(urun.ad || "Ürün")+'" loading="lazy">'+
+      '</div>'+
+      '<p class="ad">'+(urun.ad || "Ürün")+'</p>'+
+      '<p class="fiyat">'+
+        (urun.eski
+          ? '<span style="text-decoration:line-through;opacity:.6;margin-right:8px">'+TL(urun.eski)+'</span>'
+          : "")+
+        TL(urun.fiyat)+
+      '</p>';
+
+    kart.onclick=function(e){
+      e.preventDefault();
+      popupAc(urun,index);
+    };
+
+    listeDiv.appendChild(kart);
+  });
+
+  if(!listeDiv.children.length){
+    listeDiv.innerHTML=
+      '<div style="grid-column:1/-1;text-align:center;color:var(--soluk);padding:50px 0">'+
+      'Tek Kişilik Nevresim Takımı kategorisinde ürün bulunamadı.'+
+      '</div>';
+  }
+
+}).catch(function(error){
+  console.error("Firebase hatası:",error);
+  listeDiv.innerHTML=
+    '<div style="grid-column:1/-1;text-align:center;color:var(--soluk);padding:50px 0">'+
+    'Ürünler yüklenemedi.'+
+    '</div>';
+});
+</script>
+
+<!-- SEPET SAYACI (diğer sekmelerle senkron) -->
+<script>
+function sepetiYukle(){
+  var s=[];
+  try{ s=JSON.parse(localStorage.getItem("homenup_sepet") || "[]"); }catch(e){ s=[]; }
+  var toplamAdet=0;
+  s.forEach(function(urun){ toplamAdet+=Number(urun.adet || 0); });
+  var sepetBtn=document.querySelector(".sepet");
+  if(sepetBtn){ sepetBtn.textContent="Sepet ("+toplamAdet+")"; }
+}
+sepetiYukle();
+window.addEventListener("storage",function(e){
+  if(e.key==="homenup_sepet"){ sepetiYukle(); }
+});
+</script>
+
+<!-- GİRİŞ / KAYIT (modal, CSS ve Firebase Auth hesap.js içinde) -->
+<script src="hesap.js"></script>
+
+</body>
+</html>

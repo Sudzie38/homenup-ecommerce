@@ -1,0 +1,215 @@
+:root{
+  --kagit:#FFFFFF;
+  --zemin:#F3F3F1;
+  --murekkep:#16181B;
+  --soluk:#6E7278;
+  --cizgi:#E2E2DE;
+  --vurgu:#1F4B43;
+  --vurgu-yazi:#FFFFFF;
+
+  --max:1200px;
+  --bosluk:24px;
+
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --kagit:#121316;
+    --zemin:#1A1C20;
+    --murekkep:#ECECEA;
+    --soluk:#9A9EA4;
+    --cizgi:#2A2D32;
+    --vurgu:#6FBBA8;
+    --vurgu-yazi:#101314;
+  }
+}
+:root[data-theme="dark"]{
+  --kagit:#121316; --zemin:#1A1C20; --murekkep:#ECECEA;
+  --soluk:#9A9EA4; --cizgi:#2A2D32; --vurgu:#6FBBA8; --vurgu-yazi:#101314;
+}
+
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0;
+  background:var(--kagit);
+  color:var(--murekkep);
+  font-family:"Instrument Sans",-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--vurgu);outline-offset:3px}
+
+.kap{max-width:var(--max);margin:0 auto;padding:0 var(--bosluk)}
+
+/* ---------- ÜST BAR ---------- */
+.ust{
+  border-bottom:1px solid var(--cizgi);
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:20;
+  background:var(--kagit);
+}
+.ust .kap{display:flex;align-items:center;gap:28px;height:68px}
+.logo{font-family:"Instrument Serif",Georgia,serif;font-size:26px;letter-spacing:-.01em}
+.sepet{
+  border:1px solid var(--cizgi);border-radius:999px;
+  padding:7px 16px;font-size:14px;white-space:nowrap;background:transparent;color:inherit;cursor:pointer;
+  font-family:inherit;
+}
+
+/* ---------- HERO ---------- */
+.hero{
+  background:var(--zemin);
+  border-bottom:1px solid var(--cizgi);
+}
+.hero-ic{
+  display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center;
+  padding:72px 0;
+}
+.hero h1{
+  font-family:"Instrument Serif",Georgia,serif;
+  font-weight:400;font-size:clamp(38px,5.2vw,62px);
+  line-height:1.05;letter-spacing:-.02em;margin:0 0 18px;
+}
+.hero p{max-width:46ch;color:var(--soluk);margin:0 0 30px;font-size:17px}
+.btn{
+  display:inline-block;background:var(--vurgu);color:var(--vurgu-yazi);
+  padding:14px 30px;border-radius:4px;font-weight:500;font-size:15px;
+}
+.btn:hover{filter:brightness(1.08)}
+.hero-gorsel{aspect-ratio:4/3;background:var(--kagit);border:1px solid var(--cizgi);overflow:hidden}
+.hero-gorsel img{width:100%;height:100%;object-fit:cover}
+@media(max-width:860px){
+  .hero-ic{grid-template-columns:1fr;gap:32px;padding:48px 0}
+  .hero-gorsel{order:-1;aspect-ratio:16/10}
+}
+
+/* ---------- KATEGORİLER ---------- */
+.bolum{padding:72px 0}
+.bolum-bas{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:28px}
+.bolum-bas h2{
+  font-family:"Instrument Serif",Georgia,serif;font-weight:400;
+  font-size:32px;margin:0;letter-spacing:-.01em;
+}
+.bolum-bas a{font-size:15px;color:var(--soluk);border-bottom:1px solid var(--cizgi);padding-bottom:2px}
+.bolum-bas a:hover{color:var(--murekkep)}
+
+.kategoriler{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.kategori{position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--zemin);display:block}
+.kategori img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.kategori:hover img{transform:scale(1.04)}
+.kategori span{
+  position:absolute;left:18px;bottom:18px;right:18px;
+  background:var(--kagit);color:var(--murekkep);
+  padding:10px 14px;font-size:15px;font-weight:500;
+}
+@media(max-width:720px){
+  .kategoriler{grid-template-columns:1fr 1fr;gap:12px}
+  .kategori{aspect-ratio:1/1}
+}
+
+/* ---------- ÜRÜN GRID ---------- */
+.urunler{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:36px 24px;
+}
+.urun{display:block}
+.kare{
+  aspect-ratio:1/1;background:var(--zemin);overflow:hidden;
+  position:relative;margin-bottom:14px;
+}
+.kare img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.urun:hover .kare img{transform:scale(1.05)}
+.rozet{
+  position:absolute;top:12px;left:12px;background:var(--murekkep);color:var(--kagit);
+  font-size:12px;padding:4px 9px;border-radius:3px;
+}
+.ad{font-size:15px;margin:0 0 4px;font-weight:500}
+.fiyat{font-size:15px;color:var(--soluk);margin:0}
+.fiyat .eski{text-decoration:line-through;margin-right:8px;opacity:.6}
+@media(max-width:560px){
+  .urunler{grid-template-columns:1fr 1fr;gap:26px 12px}
+  .bolum{padding:48px 0}
+}
+
+/* ---------- KAMPANYA ŞERİDİ ---------- */
+.serit{background:var(--vurgu);color:var(--vurgu-yazi)}
+.serit .kap{padding-top:52px;padding-bottom:52px;text-align:center}
+.serit h2{
+  font-family:"Instrument Serif",Georgia,serif;font-weight:400;
+  font-size:clamp(26px,3.6vw,38px);margin:0 0 10px;
+}
+.serit p{margin:0 0 24px;opacity:.85}
+.serit .btn{background:var(--vurgu-yazi);color:var(--vurgu)}
+
+/* ---------- GÜVEN ---------- */
+.guven{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:52px 0;border-top:1px solid var(--cizgi)}
+.guven div h3{font-size:15px;margin:0 0 4px;font-weight:600}
+.guven div p{font-size:14px;color:var(--soluk);margin:0}
+@media(max-width:720px){.guven{grid-template-columns:1fr 1fr;gap:20px}}
+
+/* ---------- FOOTER ---------- */
+footer{background:var(--zemin);border-top:1px solid var(--cizgi);padding:56px 0 40px;font-size:14px}
+.f-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px}
+.f-grid h4{font-size:14px;margin:0 0 12px;font-weight:600}
+.f-grid ul{list-style:none;padding:0;margin:0;color:var(--soluk)}
+.f-grid li{margin-bottom:8px}
+.f-grid a:hover{color:var(--murekkep)}
+.f-alt{margin-top:40px;padding-top:20px;border-top:1px solid var(--cizgi);color:var(--soluk);font-size:13px}
+@media(max-width:720px){.f-grid{grid-template-columns:1fr 1fr}}
+
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+
+/* ---------- MENÜ (açılır alt sekmeler + mobil çekmece) ---------- */
+.menu{margin-left:auto}
+.menu ul{list-style:none;margin:0;padding:0}
+.menu > ul{display:flex;gap:4px}
+.menu a{display:block;padding:8px 12px;font-size:15px;color:var(--soluk);border-radius:4px}
+.menu a:hover,.menu a[aria-current="page"]{color:var(--murekkep)}
+.alt-var{position:relative}
+.alt{
+  display:none;position:absolute;top:100%;left:0;min-width:200px;z-index:30;
+  background:var(--kagit);border:1px solid var(--cizgi);padding:8px;
+  box-shadow:0 10px 28px rgba(0,0,0,.08);
+}
+.alt-var:hover .alt,.alt-var:focus-within .alt{display:block}
+.alt a{white-space:nowrap;color:var(--murekkep)}
+.alt a:hover{background:var(--zemin)}
+.hamburger{
+  display:none;align-items:center;justify-content:center;width:42px;height:42px;
+  border:1px solid var(--cizgi);border-radius:8px;background:transparent;color:inherit;cursor:pointer;
+}
+.hamburger span,.hamburger span::before,.hamburger span::after{
+  display:block;width:18px;height:2px;background:currentColor;position:relative;content:"";
+}
+.hamburger span::before{position:absolute;top:-6px}
+.hamburger span::after{position:absolute;top:6px}
+
+@media(max-width:860px){
+  .hamburger{display:inline-flex;margin-left:auto;order:3}
+  .sepet{order:2}
+  .menu{
+    display:none;position:absolute;left:0;right:0;top:100%;margin:0;
+    background:var(--kagit);border-bottom:1px solid var(--cizgi);
+    padding:8px var(--bosluk) 18px;max-height:calc(100vh - 68px);overflow-y:auto;
+  }
+  .menu.acik{display:block}
+  .menu > ul{flex-direction:column;gap:0}
+  .menu a{padding:12px 4px}
+  .alt{display:block;position:static;border:0;box-shadow:none;padding:0 0 0 14px;min-width:0;background:transparent}
+  .alt a{color:var(--soluk);padding:8px 4px}
+}
+
+/* ---------- KATEGORİ SAYFASI ---------- */
+.sayfa-bas{padding:56px 0 8px}
+.sayfa-bas h1{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:clamp(34px,4.6vw,52px);letter-spacing:-.02em;margin:0 0 8px}
+.sayfa-bas p{color:var(--soluk);margin:0}
+.yol{font-size:14px;color:var(--soluk);margin-bottom:18px}
+.yol a{border-bottom:1px solid var(--cizgi)}
+.yol a:hover{color:var(--murekkep)}

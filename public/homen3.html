@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mağaza — Ana Sayfa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script>
+var firebaseConfig = {
+  apiKey: "AIzaSyDD8d_fqaEEqVLaZoHKxTOAfMGinkPVQrM",
+  authDomain: "homenup-8c6ce.firebaseapp.com",
+  projectId: "homenup-8c6ce",
+  appId: "1:785637094317:web:3692bcc5465a4114422724"
+};
+firebase.initializeApp(firebaseConfig);
+var db = firebase.firestore();
+var auth = firebase.auth();
+var katalogRef = db.collection("magaza").doc("katalog");
+</script>
+
+<style>
+:root{--kagit:#FFFFFF;--zemin:#F3F3F1;--murekkep:#16181B;--soluk:#6E7278;--cizgi:#E2E2DE;--vurgu:#1F4B43;--vurgu-yazi:#FFFFFF;--max:1200px;--bosluk:24px;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--kagit:#121316;--zemin:#1A1C20;--murekkep:#ECECEA;--soluk:#9A9EA4;--cizgi:#2A2D32;--vurgu:#6FBBA8;--vurgu-yazi:#101314}}
+:root[data-theme="dark"]{--kagit:#121316;--zemin:#1A1C20;--murekkep:#ECECEA;--soluk:#9A9EA4;--cizgi:#2A2D32;--vurgu:#6FBBA8;--vurgu-yazi:#101314}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--kagit);color:var(--murekkep);font-family:"Instrument Sans",-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--vurgu);outline-offset:3px}
+.kap{max-width:var(--max);margin:0 auto;padding:0 var(--bosluk)}
+
+/* ÜST BAR */
+.ust{border-bottom:1px solid var(--cizgi);position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--kagit)}
+.ust .kap{display:flex;align-items:center;gap:12px;height:68px}
+.logo{font-family:"Instrument Serif",Georgia,serif;font-size:26px;letter-spacing:-.01em;margin-right:16px}
+.menu{display:flex;align-items:center;gap:22px;font-size:15px;color:var(--soluk);margin-right:auto;flex-wrap:nowrap}
+.menu-item{position:relative}
+.menu-item>a{display:block;padding:10px 0;white-space:nowrap}
+.menu-item>a:hover{color:var(--murekkep)}
+.dropdown{position:absolute;top:100%;left:0;min-width:210px;background:var(--kagit);border:1px solid var(--cizgi);padding:8px 0;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s ease,transform .2s ease,visibility .2s ease;z-index:100}
+.dropdown a{display:block;padding:10px 16px;color:var(--murekkep);font-size:14px;white-space:nowrap}
+.dropdown a:hover{background:var(--zemin)}
+.menu-item:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0)}
+.sepet,.hesap{border:1px solid var(--cizgi);border-radius:999px;padding:7px 16px;font-size:14px;white-space:nowrap;background:transparent;color:inherit;cursor:pointer;font-family:inherit;flex-shrink:0;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+.hesap:hover,.sepet:hover{background:var(--zemin)}
+@media(max-width:720px){.menu{display:none}.ust .kap{justify-content:flex-end}.logo{margin-right:auto}}
+
+/* HERO */
+.hero{background:var(--zemin);border-bottom:1px solid var(--cizgi)}
+.hero-ic{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center;padding:72px 0}
+.hero h1{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:clamp(38px,5.2vw,62px);line-height:1.05;letter-spacing:-.02em;margin:0 0 18px}
+.hero p{max-width:46ch;color:var(--soluk);margin:0 0 30px;font-size:17px}
+.btn{display:inline-block;background:var(--vurgu);color:var(--vurgu-yazi);padding:14px 30px;border-radius:4px;font-weight:500;font-size:15px}
+.btn:hover{filter:brightness(1.08)}
+.hero-gorsel{aspect-ratio:4/3;background:var(--kagit);border:1px solid var(--cizgi);overflow:hidden}
+.hero-gorsel img{width:100%;height:100%;object-fit:cover}
+@media(max-width:860px){.hero-ic{grid-template-columns:1fr;gap:32px;padding:48px 0}.hero-gorsel{order:-1;aspect-ratio:16/10}}
+
+/* KATEGORİLER */
+.bolum{padding:72px 0}
+.bolum-bas{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:28px}
+.bolum-bas h2{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:32px;margin:0;letter-spacing:-.01em}
+.bolum-bas a{font-size:15px;color:var(--soluk);border-bottom:1px solid var(--cizgi);padding-bottom:2px}
+.bolum-bas a:hover{color:var(--murekkep)}
+.kategoriler{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.kategori{position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--zemin);display:block}
+.kategori img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.kategori:hover img{transform:scale(1.04)}
+.kategori span{position:absolute;left:18px;bottom:18px;right:18px;background:var(--kagit);color:var(--murekkep);padding:10px 14px;font-size:15px;font-weight:500}
+@media(max-width:720px){.kategoriler{grid-template-columns:1fr 1fr;gap:12px}.kategori{aspect-ratio:1/1}}
+
+/* ÜRÜNLER */
+.urunler{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:36px 24px}
+.urun{display:block}
+.kare{aspect-ratio:1/1;background:var(--zemin);overflow:hidden;position:relative;margin-bottom:14px}
+.kare img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.urun:hover .kare img{transform:scale(1.05)}
+.rozet{position:absolute;top:12px;left:12px;background:var(--murekkep);color:var(--kagit);font-size:12px;padding:4px 9px;border-radius:3px}
+.ad{font-size:15px;margin:0 0 4px;font-weight:500}
+.fiyat{font-size:15px;color:var(--soluk);margin:0}
+.fiyat .eski{text-decoration:line-through;margin-right:8px;opacity:.6}
+@media(max-width:560px){.urunler{grid-template-columns:1fr 1fr;gap:26px 12px}.bolum{padding:48px 0}}
+
+/* KAMPANYA */
+.serit{background:var(--vurgu);color:var(--vurgu-yazi)}
+.serit .kap{padding-top:52px;padding-bottom:52px;text-align:center}
+.serit h2{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:clamp(26px,3.6vw,38px);margin:0 0 10px}
+.serit p{margin:0 0 24px;opacity:.85}
+.serit .btn{background:var(--vurgu-yazi);color:var(--vurgu)}
+
+/* GÜVEN */
+.guven{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:52px 0;border-top:1px solid var(--cizgi)}
+.guven div h3{font-size:15px;margin:0 0 4px;font-weight:600}
+.guven div p{font-size:14px;color:var(--soluk);margin:0}
+@media(max-width:720px){.guven{grid-template-columns:1fr 1fr;gap:20px}}
+
+/* FOOTER */
+footer{background:var(--zemin);border-top:1px solid var(--cizgi);padding:56px 0 40px;font-size:14px}
+.f-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px}
+.f-grid h4{font-size:14px;margin:0 0 12px;font-weight:600}
+.f-grid ul{list-style:none;padding:0;margin:0;color:var(--soluk)}
+.f-grid li{margin-bottom:8px}
+.f-grid a:hover{color:var(--murekkep)}
+.f-alt{margin-top:40px;padding-top:20px;border-top:1px solid var(--cizgi);color:var(--soluk);font-size:13px}
+@media(max-width:720px){.f-grid{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- GİRİŞ / KAYIT MODALI ---------- */
+.modal-arka{position:fixed;inset:0;z-index:200;background:rgba(22,24,27,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:opacity .2s ease,visibility .2s ease}
+.modal-arka.acik{opacity:1;visibility:visible}
+.modal{width:100%;max-width:400px;background:var(--kagit);color:var(--murekkep);border:1px solid var(--cizgi);border-radius:8px;padding:32px 28px 28px;position:relative;transform:translateY(12px);transition:transform .2s ease;max-height:100%;overflow-y:auto}
+.modal-arka.acik .modal{transform:translateY(0)}
+.modal-kapat{position:absolute;top:12px;right:12px;width:34px;height:34px;border:0;background:transparent;color:var(--soluk);font-size:22px;line-height:1;cursor:pointer;border-radius:50%}
+.modal-kapat:hover{background:var(--zemin);color:var(--murekkep)}
+.modal-logo{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:30px;letter-spacing:-.01em;margin:0 0 4px}
+.modal-alt{color:var(--soluk);font-size:14px;margin:0 0 22px}
+.sekmeler{display:flex;border-bottom:1px solid var(--cizgi);margin-bottom:22px}
+.sekme{flex:1;padding:10px 0;background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;font:inherit;font-size:15px;color:var(--soluk);cursor:pointer}
+.sekme.aktif{color:var(--murekkep);border-bottom-color:var(--vurgu);font-weight:500}
+.alan{margin-bottom:14px}
+.alan label{display:block;font-size:13px;font-weight:500;margin-bottom:6px}
+.alan input{width:100%;padding:12px 14px;font:inherit;font-size:16px;background:var(--kagit);color:var(--murekkep);border:1px solid var(--cizgi);border-radius:4px}
+.alan input:focus{outline:none;border-color:var(--vurgu);box-shadow:0 0 0 3px color-mix(in srgb,var(--vurgu) 20%,transparent)}
+.alan small{display:block;margin-top:6px;font-size:12px;color:var(--soluk)}
+.modal-btn{width:100%;padding:13px;border:0;border-radius:4px;background:var(--vurgu);color:var(--vurgu-yazi);font:inherit;font-size:15px;font-weight:500;cursor:pointer;margin-top:4px}
+.modal-btn:hover{filter:brightness(1.08)}
+.modal-btn:disabled{opacity:.6;cursor:wait}
+.modal-btn.ikincil{background:transparent;color:var(--murekkep);border:1px solid var(--cizgi);display:flex;align-items:center;justify-content:center;gap:10px}
+.modal-btn.ikincil:hover{background:var(--zemin);filter:none}
+.ayrac{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--soluk);font-size:13px}
+.ayrac::before,.ayrac::after{content:"";flex:1;height:1px;background:var(--cizgi)}
+.mesaj{display:none;font-size:14px;padding:10px 12px;border-radius:4px;margin-bottom:14px;background:var(--zemin);border:1px solid var(--cizgi)}
+.mesaj.goster{display:block}
+.mesaj.hata{color:#B3261E;border-color:#B3261E}
+.hesap-bilgi{text-align:center}
+.hesap-bilgi .eposta{font-weight:500;word-break:break-all;margin:6px 0 22px}
+.gizli{display:none!important}
+</style>
+</head>
+
+<body>
+
+<!-- ÜST MENÜ -->
+<header class="ust">
+<div class="kap">
+
+<a href="homen3.html" class="logo">HOMENUP</a>
+
+<nav class="menu">
+  <div class="menu-item"><a href="kategori.html" target="_blank">Lastikli Çarşaf</a></div>
+
+  <div class="menu-item">
+    <a href="kategori2.html" target="_blank">Nevresim Takımı</a>
+    <div class="dropdown">
+      <a href="tek-kisilik-nevresim.html" target="_blank">Tek Kişilik</a>
+      <a href="cift-kisilik-nevresim.html" target="_blank">Çift Kişilik</a>
+    </div>
+  </div>
+
+  <div class="menu-item"><a href="alez2.html" target="_blank">Alez</a></div>
+  <div class="menu-item"><a href="pestemal.html" target="_blank">Peştemal Panço</a></div>
+  <div class="menu-item"><a href="indirim.html" target="_blank">İndirim</a></div>
+</nav>
+
+<button class="hesap" id="hesapBtn" onclick="hesapPenceresi()">Giriş Yap</button>
+<button class="sepet" id="sepetBtn" onclick="window.open('odeme.html','_blank')">Sepet (0)</button>
+
+</div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+<div class="kap hero-ic">
+  <div>
+    <h1>Nevresim Takım Parçası</h1>
+    <p>Aynı gün kargo, 14 gün içinde ücretsiz iade.</p>
+    <a href="#urunler" class="btn">Koleksiyonu gör</a>
+  </div>
+  <div class="hero-gorsel">
+    <img src="IMG_20260807_170144.png" alt="Lastikli Çarşaf" onerror="this.remove()">
+  </div>
+</div>
+</section>
+
+<!-- KATEGORİLER -->
+<section class="bolum">
+<div class="kap">
+  <div class="bolum-bas">
+    <h2>Tüm Ürünler</h2>
+    <a href="#">Tümü</a>
+  </div>
+  <div class="kategoriler" id="kategoriListesi"></div>
+</div>
+</section>
+
+<!-- ÜRÜNLER -->
+<section class="bolum" id="urunler" style="padding-top:0">
+<div class="kap">
+  <div class="bolum-bas">
+    <h2>Tüm Ürünler</h2>
+    <a href="#">Çok satanlar</a>
+  </div>
+  <div class="urunler" id="urunListesi"></div>
+</div>
+</section>
+
+<!-- KAMPANYA -->
+<section class="serit">
+<div class="kap">
+  <h2>İki al, ikincisinde %10 indirim</h2>
+  <p>Kampanya 30 Eylül'e kadar geçerli.</p>
+  <a href="#" class="btn">Kampanyalı ürünler</a>
+</div>
+</section>
+
+<!-- GÜVEN -->
+<section class="kap">
+<div class="guven">
+  <div><h3>Ücretsiz kargo</h3><p>1.000 TL üzeri siparişlerde</p></div>
+  <div><h3>14 gün iade</h3><p>Koşulsuz, kargo bizden</p></div>
+  <div><h3>Güvenli ödeme</h3><p>Tüm kartlara taksit</p></div>
+  <div><h3>Aynı gün kargo</h3><p>14:00'a kadar verilen siparişler</p></div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="kap">
+  <div class="f-grid">
+    <div>
+      <div class="logo" style="margin-bottom:10px">Mağaza</div>
+      <p style="color:var(--soluk);margin:0;max-width:34ch">Sade, uzun ömürlü parçalar. Denizli'den tüm Türkiye'ye gönderim.</p>
+    </div>
+    <div>
+      <h4>Alışveriş</h4>
+      <ul>
+        <li><a href="#">Yeni gelenler</a></li>
+        <li><a href="#">Çok satanlar</a></li>
+        <li><a href="#">İndirimdekiler</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Yardım</h4>
+      <ul>
+        <li><a href="#">Kargo ve teslimat</a></li>
+        <li><a href="#">İade ve değişim</a></li>
+        <li><a href="#">Sıkça sorulanlar</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Kurumsal</h4>
+      <ul>
+        <li><a href="#">Hakkımızda</a></li> /* BURAYI DÜZENLE */
+        <li><a href="#">İletişim</a></li> /* BURAYI DÜZENLE */
+        <li><a href="#">Gizlilik</a></li> /* BURAYI DÜZENLE */
+      </ul>
+    </div>
+  </div>
+  <div class="f-alt">© 2026 Mağaza. Tüm hakları saklıdır.</div>
+</div>
+</footer>
+
+<!-- GİRİŞ / KAYIT MODALI -->
+<div class="modal-arka" id="hesapModal" role="dialog" aria-modal="true" aria-labelledby="modalBaslik">
+  <div class="modal">
+    <button class="modal-kapat" type="button" onclick="modalKapat()" aria-label="Kapat">&times;</button>
+
+    <div id="formGorunum">
+      <h2 class="modal-logo" id="modalBaslik">HOMENUP</h2>
+      <p class="modal-alt" id="modalAlt">Hesabına giriş yap.</p>
+
+      <div class="sekmeler">
+        <button class="sekme aktif" type="button" id="sekmeGiris" onclick="sekmeDegistir('giris')">Giriş Yap</button>
+        <button class="sekme" type="button" id="sekmeKayit" onclick="sekmeDegistir('kayit')">Kayıt Ol</button>
+      </div>
+
+      <div class="mesaj" id="modalMesaj"></div>
+
+      <div class="alan">
+        <label for="mEmail">E-posta</label>
+        <input type="email" id="mEmail" autocomplete="email" placeholder="">
+      </div>
+      <div class="alan">
+        <label for="mSifre">Şifre</label>
+        <input type="password" id="mSifre" autocomplete="current-password" placeholder="">
+        <small id="sifreIpucu" class="gizli">En az 12 karakter olmalı.</small>
+      </div>
+
+      <button class="modal-btn" type="button" id="anaBtn" onclick="formGonder()">Giriş Yap</button>
+
+      <div class="ayrac">veya</div>
+
+      <button class="modal-btn ikincil" type="button" onclick="googleIleGiris()">
+        <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7A14.5 14.5 0 0 1 9.5 24c0-1.6.3-3.2.8-4.7l-7.9-6.1A24 24 0 0 0 0 24c0 3.9.9 7.5 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+        Google ile devam et
+      </button>
+    </div>
+
+    <div id="hesapGorunum" class="hesap-bilgi gizli">
+      <h2 class="modal-logo">Hesabım</h2>
+      <p class="modal-alt">Şu hesapla giriş yapıldı:</p>
+      <div class="eposta" id="hesapEposta"></div>
+      <button class="modal-btn ikincil" type="button" onclick="cikisYap()">Çıkış Yap</button>
+    </div>
+  </div>
+</div>
+
+<!-- FIREBASE ÜRÜNLERİ -->
+<script>
+katalogRef.get().then(function(doc){
+  var liste = [];
+  if(doc.exists){
+    var veri = doc.data().liste;
+    if(typeof veri === "string"){ try{ veri = JSON.parse(veri); }catch(e){ veri = []; } }
+    if(Array.isArray(veri)){ liste = veri; }
+  }
+
+  if(!liste.length){
+    liste = [
+      {ad:"Çift Kişilik Lastikli Çarşaf",kat:"Lastikli Çarşaf",fiyat:1290,rozet:"Yeni",olcu:["160x200","180x200"],res:["IMG_20260807_165934.png","IMG_20260807_170437.png","IMG_20260807_170542.png"]},
+      {ad:"Çift Kişilik Nevresim Takımı",kat:"Nevresim Takımı",fiyat:590,olcu:["200x220"],res:["IMG_20260807_141930.png","IMG_20260807_153823.png"]},
+      {ad:"Tek Kişilik Nevresim Takımı",kat:"Nevresim Takımı",fiyat:1480,eski:1850,rozet:"%20",olcu:["160x220"],res:["Yapay Zeka ile Oluşturuldu_20260811_232045_0000.jpg","Yapay Zeka ile Oluşturuldu_20260811_232345_0000.jpg"]},
+      {ad:"Çift Kişilik Lastikli Çarşaf",kat:"Lastikli Çarşaf",fiyat:2150,olcu:["160x200","180x200"],res:["IMG_20260807_170542.png","IMG_20260807_165934.png"]},
+      {ad:"Mavi Çiçekli Çift Kişilik Nevresim Takımı",kat:"Nevresim Takımı",fiyat:1120,olcu:["200x220"],res:["Yapay Zeka ile Oluşturuldu_20260811_231837_0000.jpg","Yapay Zeka ile Oluşturuldu_20260811_231949_0000.jpg"]},
+      {ad:"Beyaz Çift Kişilik Lastikli Çarşaf",kat:"Lastikli Çarşaf",fiyat:2790,olcu:["160x200","180x200"],res:["IMG_20260807_170437.png","IMG_20260807_165934.png"]},
+      {ad:"Su Yeşili Tek Kişilik Nevresim Takımı",kat:"Nevresim Takımı",fiyat:1640,rozet:"Son 3",olcu:["160x220"],res:["Yapay Zeka ile Oluşturuldu_20260811_232345_0000.jpg","Yapay Zeka ile Oluşturuldu_20260811_232045_0000.jpg"]},
+      {ad:"Desenli Çift Kişilik Nevresim Takımı",kat:"Nevresim Takımı",fiyat:740,olcu:["200x220"],res:["Yapay Zeka ile Oluşturuldu_20260811_231949_0000.jpg","Yapay Zeka ile Oluşturuldu_20260811_231837_0000.jpg"]}
+    ];
+  }
+
+  /* KATEGORİLER */
+  var kategoriListesi = document.getElementById("kategoriListesi");
+  var kategoriler = [
+    {ad:"Çift Kişilik Lastikli Çarşaf",kat:"Lastikli Çarşaf"},
+    {ad:"Çift Kişilik Nevresim Takımı",kat:"Nevresim Takımı"},
+    {ad:"Tek Kişilik Nevresim Takımı",kat:"Nevresim Takımı"}
+  ];
+
+  kategoriler.forEach(function(kat){
+    var urun = liste.find(function(u){ return u.ad === kat.ad; });
+    if(!urun){ urun = liste.find(function(u){ return u.kat === kat.kat; }); }
+    if(!urun) return;
+
+    var index = liste.indexOf(urun);
+    var resim = urun.res && urun.res.length ? urun.res[0] : "";
+
+    var a = document.createElement("a");
+    a.href = "urun.html?id=" + (index + 1);
+    a.className = "kategori";
+    a.target = "_blank";
+    a.innerHTML = '<img src="' + resim + '" alt="' + urun.ad + '" onerror="this.remove()"><span>' + urun.ad + '</span>';
+    kategoriListesi.appendChild(a);
+  });
+
+  /* ÜRÜNLER */
+  var urunListesi = document.getElementById("urunListesi");
+
+  liste.forEach(function(urun,index){
+    var resim = urun.res && urun.res.length ? urun.res[0] : "";
+    var fiyatHTML = "";
+    if(urun.eski){
+      fiyatHTML += '<span class="eski">' + Number(urun.eski).toLocaleString("tr-TR") + ' TL</span>';
+    }
+    fiyatHTML += Number(urun.fiyat || 0).toLocaleString("tr-TR") + " TL";
+    var rozetHTML = urun.rozet ? '<span class="rozet">' + urun.rozet + '</span>' : "";
+
+    var a = document.createElement("a");
+    a.href = "urun.html?id=" + (index + 1);
+    a.className = "urun";
+    a.target = "_blank";
+    a.innerHTML =
+      '<div class="kare">' + rozetHTML +
+      '<img src="' + resim + '" alt="' + urun.ad + '" loading="lazy" onerror="this.remove()"></div>' +
+      '<p class="ad">' + urun.ad + '</p>' +
+      '<p class="fiyat">' + fiyatHTML + '</p>';
+    urunListesi.appendChild(a);
+  });
+
+}).catch(function(error){
+  console.error("Firebase ürünleri alınamadı:",error);
+});
+</script>
+
+<!-- KULLANICI SİSTEMİ + MODAL -->
+<script>
+var hesapBtn = document.getElementById("hesapBtn");
+var modal = document.getElementById("hesapModal");
+var aktifSekme = "giris";
+
+function hesapPenceresi(){
+  var user = auth.currentUser;
+  document.getElementById("formGorunum").classList.toggle("gizli", !!user);
+  document.getElementById("hesapGorunum").classList.toggle("gizli", !user);
+  if(user){ document.getElementById("hesapEposta").textContent = user.email || ""; }
+  mesajGoster("");
+  modal.classList.add("acik");
+  if(!user){ setTimeout(function(){ document.getElementById("mEmail").focus(); }, 150); }
+}
+
+function modalKapat(){ modal.classList.remove("acik"); }
+
+modal.addEventListener("click", function(e){ if(e.target === modal) modalKapat(); });
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape") modalKapat();
+  if(e.key === "Enter" && modal.classList.contains("acik") && e.target.closest(".alan")) formGonder();
+});
+
+function sekmeDegistir(hangi){
+  aktifSekme = hangi;
+  var kayit = hangi === "kayit";
+  document.getElementById("sekmeGiris").classList.toggle("aktif", !kayit);
+  document.getElementById("sekmeKayit").classList.toggle("aktif", kayit);
+  document.getElementById("anaBtn").textContent = kayit ? "Hesap Oluştur" : "Giriş Yap";
+  document.getElementById("modalAlt").textContent = kayit ? "Yeni hesap oluştur." : "Hesabına giriş yap.";
+  document.getElementById("sifreIpucu").classList.toggle("gizli", !kayit);
+  document.getElementById("mSifre").autocomplete = kayit ? "new-password" : "current-password";
+  mesajGoster("");
+}
+
+function mesajGoster(metin){
+  var m = document.getElementById("modalMesaj");
+  m.textContent = metin || "";
+  m.className = "mesaj" + (metin ? " goster hata" : "");
+}
+
+function hataMetni(error){
+  switch(error.code){
+    case "auth/email-already-in-use": return "Bu e-posta adresi zaten kayıtlı.";
+    case "auth/invalid-email": return "Geçerli bir e-posta adresi gir.";
+    case "auth/weak-password": return "Şifre çok zayıf. En az 12 karakter kullan.";
+    case "auth/invalid-credential":
+    case "auth/wrong-password":
+    case "auth/user-not-found": return "E-posta veya şifre yanlış.";
+    case "auth/too-many-requests": return "Çok fazla deneme yapıldı. Biraz sonra tekrar dene.";
+    case "auth/network-request-failed": return "Bağlantı hatası. İnternetini kontrol et.";
+    default: return "Bir hata oluştu: " + error.message;
+  }
+}
+
+function formGonder(){
+  var email = document.getElementById("mEmail").value.trim();
+  var sifre = document.getElementById("mSifre").value;
+  var btn = document.getElementById("anaBtn");
+
+  if(!email || !sifre){ mesajGoster("E-posta ve şifre gerekli."); return; }
+  if(aktifSekme === "kayit" && sifre.length < 12){
+    mesajGoster("Şifre en az 12 karakter olmalıdır."); return;
+  }
+
+  btn.disabled = true;
+  var islem = aktifSekme === "kayit"
+    ? auth.createUserWithEmailAndPassword(email, sifre)
+    : auth.signInWithEmailAndPassword(email, sifre);
+
+  islem.then(function(){
+    btn.disabled = false;
+    document.getElementById("mSifre").value = "";
+    kullaniciArayuzunuGuncelle();
+    modalKapat();
+  }).catch(function(error){
+    console.error(error);
+    btn.disabled = false;
+    mesajGoster(hataMetni(error));
+  });
+}
+
+function googleIleGiris(){
+  var provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).then(function(){
+    kullaniciArayuzunuGuncelle();
+    modalKapat();
+  }).catch(function(error){
+    if(error.code === "auth/popup-closed-by-user" || error.code === "auth/cancelled-popup-request") return;
+    console.error(error);
+    mesajGoster(hataMetni(error));
+  });
+}
+
+function cikisYap(){
+  auth.signOut().then(function(){
+    kullaniciArayuzunuGuncelle();
+    modalKapat();
+  }).catch(function(error){
+    console.error(error);
+    alert("Çıkış yapılırken hata oluştu.");
+  });
+}
+
+function kullaniciArayuzunuGuncelle(){
+  var user = auth.currentUser;
+  if(!hesapBtn) return;
+  hesapBtn.textContent = user ? (user.email || "Hesabım") : "Giriş Yap";
+}
+
+auth.onAuthStateChanged(function(user){
+  kullaniciArayuzunuGuncelle();
+});
+</script>
+
+<!-- SEPET -->
+<script>
+function sepetiYukle(){
+  var sepet = [];
+  try{ sepet = JSON.parse(localStorage.getItem("homenup_sepet") || "[]"); }catch(e){ sepet = []; }
+  var toplamAdet = 0;
+  sepet.forEach(function(urun){ toplamAdet += Number(urun.adet || 0); });
+  var sepetBtn = document.querySelector(".sepet");
+  if(sepetBtn){ sepetBtn.textContent = "Sepet (" + toplamAdet + ")"; }
+}
+sepetiYukle();
+window.addEventListener("storage", function(e){
+  if(e.key === "homenup_sepet"){ sepetiYukle(); }
+});
+</script>
+<!-- =========================
+     HESAP SİSTEMİ
+========================= -->
+
+<!-- hesap.js -->
+<script src="hesap.js"></script>
+
+<!-- HESAP MODALI -->
+<div id="hesapModal" class="hesap-modal">
+
+  <div class="hesap-kutu">
+
+    <button class="hesap-kapat" onclick="hesapKapat()">
+      ×
+    </button>
+
+    <!-- GİRİŞ / KAYIT -->
+    <div id="formGorunum">
+
+      <h2>Hesabım</h2>
+
+      <div class="hesap-sekmeler">
+        <button type="button" onclick="sekmeDegistir('giris')">
+          Giriş Yap
+        </button>
+
+        <button type="button" onclick="sekmeDegistir('kayit')">
+          Kayıt Ol
+        </button>
+      </div>
+
+      <!-- GİRİŞ -->
+      <div id="girisFormu">
+
+        <input
+          type="email"
+          id="mEmail"
+          placeholder="E-posta"
+        >
+
+        <input
+          type="password"
+          id="mSifre"
+          placeholder="Şifre"
+        >
+
+        <button type="button" onclick="girisYap()">
+          Giriş Yap
+        </button>
+
+      </div>
+
+      <!-- KAYIT -->
+      <div id="kayitFormu" class="gizli">
+
+        <input
+          type="email"
+          id="kayitEmail"
+          placeholder="E-posta"
+        >
+
+        <input
+          type="password"
+          id="kayitSifre"
+          placeholder="Şifre"
+        >
+
+        <button type="button" onclick="kayitOl()">
+          Kayıt Ol
+        </button>
+
+      </div>
+
+      <div id="hesapMesaj"></div>
+
+    </div>
+
+
+    <!-- GİRİŞ YAPMIŞ KULLANICI -->
+    <div id="hesapGorunum" class="gizli">
+
+      <h2>Hesabım</h2>
+
+      <p id="hesapEposta"></p>
+
+      <button type="button" onclick="cikisYap()">
+        Çıkış Yap
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- HESAP JAVASCRIPT -->
+<script>
+
+var hesapBtn = document.getElementById("hesapBtn");
+var modal = document.getElementById("hesapModal");
+
+var aktifSekme = "giris";
+
+
+function hesapPenceresi(){
+
+  var user = auth.currentUser;
+
+  document
+    .getElementById("formGorunum")
+    .classList
+    .toggle("gizli", !!user);
+
+  document
+    .getElementById("hesapGorunum")
+    .classList
+    .toggle("gizli", !user);
+
+  if(user){
+
+    document.getElementById("hesapEposta").textContent =
+      user.email || "";
+
+  }
+
+  modal.classList.add("acik");
+
+  if(!user){
+
+    setTimeout(function(){
+
+      sekmeDegistir(aktifSekme);
+
+    }, 0);
+
+  }
+
+}
+
+function hesapKapat(){
+  modal.classList.remove("acik");
+}
+
+function sekmeDegistir(sekme){
+  aktifSekme = sekme;
+  document.getElementById("girisFormu").classList.toggle("gizli", sekme !== "giris");
+  document.getElementById("kayitFormu").classList.toggle("gizli", sekme !== "kayit");
+  document.getElementById("hesapMesaj").textContent = "";
+}
+
+function hesapHataGoster(error){
+  document.getElementById("hesapMesaj").textContent =
+    typeof hataMetni === "function" ? hataMetni(error) : "Bir hata oluştu.";
+}
+
+function girisYap(){
+  var email = document.getElementById("mEmail").value.trim();
+  var sifre = document.getElementById("mSifre").value;
+  if(!email || !sifre){
+    document.getElementById("hesapMesaj").textContent = "E-posta ve şifre gerekli.";
+    return;
+  }
+  auth.signInWithEmailAndPassword(email, sifre)
+    .then(function(){ hesapPenceresi(); })
+    .catch(hesapHataGoster);
+}
+
+function kayitOl(){
+  var email = document.getElementById("kayitEmail").value.trim();
+  var sifre = document.getElementById("kayitSifre").value;
+  if(!email || !sifre){
+    document.getElementById("hesapMesaj").textContent = "E-posta ve şifre gerekli.";
+    return;
+  }
+  auth.createUserWithEmailAndPassword(email, sifre)
+    .then(function(){ hesapPenceresi(); })
+    .catch(hesapHataGoster);
+}
+
+if(hesapBtn){
+  hesapBtn.addEventListener("click", hesapPenceresi);
+}
+</script>
+
+</body>
+</html>
