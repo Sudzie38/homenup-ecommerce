@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Ana sayfa
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "odeme.html"));
+    res.sendFile(path.join(__dirname, "public", "homen3.html"));
 });
 
 // Test
