@@ -5,3 +5,4 @@ node_modules/
 .DS_Store
 serviceAccountKey.json
 *-service-account*.json
+*.zip
